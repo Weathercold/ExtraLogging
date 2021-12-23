@@ -2,6 +2,7 @@ package logging;
 
 import arc.Events;
 import arc.struct.Seq;
+import arc.util.CommandHandler;
 import arc.util.Log;
 import mindustry.Vars;
 import mindustry.game.EventType.*;
@@ -18,21 +19,32 @@ public class ExtraLogging extends Mod{
     );
     
     public ExtraLogging(){
-        Log.info("ExtraLogging.ExtraLogging()");
+        Log.formatter = new ExtraLogFormatter();
 
-        listeningEvents.each(c -> Events.on(c, e -> Log.info(c.getName()) ));
+        Log.info("[EL] ExtraLogging.ExtraLogging()");
+
+        listeningEvents.each(c -> Events.on(c, e -> Log.info("[EL] " + c.getName()) ));
     }
 
     @Override
     public void init(){
-        Log.info("ExtraLogging.init()");
+        Log.info("[EL] ExtraLogging.init()");
 
         Vars.enableConsole = true;
     }
 
     @Override
     public void loadContent(){
-        Log.info("ExtraLogging.loadContent()");
+        Log.info("[EL] ExtraLogging.loadContent()");
     }
 
+    @Override
+    public void registerServerCommands(CommandHandler handler){
+        Log.info("[EL] ExtraLogging.registerServerCommands()");
+    }
+
+    @Override
+    public void registerClientCommands(CommandHandler handler){
+        Log.info("[EL] ExtraLogging.registerClientCommands()");
+    }
 }
