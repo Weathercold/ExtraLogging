@@ -1,5 +1,6 @@
 package logging;
 
+import rhino.json.JsonParser;
 import arc.Events;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
@@ -10,20 +11,25 @@ import mindustry.mod.Mod;
 
 @SuppressWarnings("unchecked")
 public class ExtraLogging extends Mod{
-    public Seq<Class<? extends Object>> listeningEvents = Seq.with(
+    public static final Seq<Class<? extends Object>> listeningEvents = Seq.with(
         ClientLoadEvent.class,
         ContentInitEvent.class,
         FileTreeInitEvent.class,
         WorldLoadEvent.class,
         PlayEvent.class
     );
-    
-    public ExtraLogging(){
+
+    public final Seq<String> listeningMethods = Seq.with(
+    );
+
+    public ExtraLogging() throws NoSuchMethodException, SecurityException{
         Log.formatter = new ExtraLogFormatter();
 
         Log.info("[EL] ExtraLogging.ExtraLogging()");
 
         listeningEvents.each(c -> Events.on(c, e -> Log.info("[EL] " + c.getName()) ));
+
+        rhin
     }
 
     @Override
