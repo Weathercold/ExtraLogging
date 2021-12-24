@@ -9,4 +9,5 @@
 
     main: logging.ExtraLogging
     java: true
+    hidden: true
 }
