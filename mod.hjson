@@ -1,7 +1,7 @@
 {
     name: extra-logging
     displayName: Extra Logging
-    description: Adds some extra logging, for test purposes.
+    description: Adds some extra logging for debugging purposes.
     author: Weathercold
 
     version: 1.0
