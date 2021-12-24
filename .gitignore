@@ -38,8 +38,8 @@ config/
 version.properties
 
 .attach_*
-## Java
 
+## Java
 *.class
 *.war
 *.ear
@@ -58,6 +58,10 @@ gwt-unitCache/
 www-test/
 .gwt-tmp/
 
+## VS
+/.vs/
+/.vscode/
+
 ## Android Studio and Intellij and Android in general
 /android/libs/armeabi/
 /android/libs/armeabi-v7a/
@@ -73,7 +77,6 @@ www-test/
 com_crashlytics_export_strings.xml
 
 ## Eclipse
-
 .classpath
 .project
 .metadata/
@@ -93,7 +96,6 @@ com_crashlytics_export_strings.xml
 *.launch
 
 ## NetBeans
-
 /nbproject/private/
 /android/nbproject/private/
 /core/nbproject/private/
@@ -138,7 +140,6 @@ nbactions.xml
 nb-configuration.xml
 
 ## Gradle
-
 /local.properties
 .gradle/
 gradle-app.setting
