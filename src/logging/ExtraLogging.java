@@ -28,8 +28,6 @@ public class ExtraLogging extends Mod{
         Log.info("[EL] ExtraLogging.ExtraLogging()");
 
         listeningEvents.each(c -> Events.on(c, e -> Log.info("[EL] " + c.getName()) ));
-
-        rhin
     }
 
     @Override
