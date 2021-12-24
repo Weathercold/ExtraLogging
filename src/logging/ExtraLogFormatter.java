@@ -1,6 +1,6 @@
 package logging;
 
-import java.time.Instant;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import arc.util.Log;
@@ -14,7 +14,7 @@ public class ExtraLogFormatter extends DefaultLogFormatter{
     @Override
     public String format(String text, boolean useColors, Object... args){
         text = Strings.format(text, args);
-        String ftext = Strings.format(tmpl, timef.format(Instant.now()), (text.startsWith("[EL]") ? "blue" : ""), text);
+        String ftext = Strings.format(tmpl, timef.format(LocalTime.now()), (text.startsWith("[EL]") ? "blue" : ""), text);
         
         return useColors ? Log.addColors(ftext) : Log.removeColors(ftext);
     }
