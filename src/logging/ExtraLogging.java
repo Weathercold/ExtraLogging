@@ -1,6 +1,5 @@
 package logging;
 
-import rhino.json.JsonParser;
 import arc.Events;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
