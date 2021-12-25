@@ -19,8 +19,8 @@ public class ExtraLogging extends Mod{
         ContentInitEvent.class,
         WorldLoadEvent.class,
         ClientLoadEvent.class,
-        ClientPreConnectEvent.class,
         StateChangeEvent.class,
+        ClientPreConnectEvent.class,
         PlayEvent.class
     );
 
@@ -30,23 +30,18 @@ public class ExtraLogging extends Mod{
         Log.info("[EL] " + ExtraLogging.class);
 
         registerEvents();
-        wrapMethods();
     }
     
     private void registerEvents(){
         listeningEvents.each(c -> Events.on(c, e -> {
             String dataString = "";
             for (Field datum : c.getDeclaredFields()){
-                try {dataString += " " + datum.get(e);}
+                try {dataString += " " + datum + "=" + datum.get(e);}
                 catch (IllegalArgumentException | IllegalAccessException err){}
             }
             
             Log.info("[EL] " + c.getName() + dataString);
         }));
-    }
-
-    private void wrapMethods(){
-        
     }
 
     @Override
