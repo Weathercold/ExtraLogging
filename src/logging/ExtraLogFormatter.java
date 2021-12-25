@@ -8,13 +8,13 @@ import arc.util.Log.DefaultLogFormatter;
 import arc.util.Strings;
 
 public class ExtraLogFormatter extends DefaultLogFormatter{
-    public static DateTimeFormatter timef = DateTimeFormatter.ISO_LOCAL_TIME;
-    public static String tmpl = "[grey]@ [@]@";
+    public static DateTimeFormatter timef = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+    public static String tmpl = "[grey][@] [@]@";
 
     @Override
     public String format(String text, boolean useColors, Object... args){
         text = Strings.format(text, args);
-        String ftext = Strings.format(tmpl, timef.format(LocalTime.now()), (text.startsWith("[EL]") ? "blue" : ""), text);
+        String ftext = Strings.format(tmpl, timef.format(LocalTime.now()), (text.startsWith("[EL]") ? "goldenrod" : "white"), text);
         
         return useColors ? Log.addColors(ftext) : Log.removeColors(ftext);
     }
