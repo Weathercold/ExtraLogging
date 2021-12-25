@@ -1,7 +1,9 @@
 package logging;
 
-import rhino.json.JsonParser;
+import java.lang.reflect.Field;
+
 import arc.Events;
+import arc.func.Cons;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Log;
@@ -11,23 +13,40 @@ import mindustry.mod.Mod;
 
 @SuppressWarnings("unchecked")
 public class ExtraLogging extends Mod{
-    public static final Seq<Class<? extends Object>> listeningEvents = Seq.with(
-        ClientLoadEvent.class,
-        ContentInitEvent.class,
+    public static Seq<Class<? extends Object>> listeningEvents = Seq.with(
+        //In chronological order
         FileTreeInitEvent.class,
+        ContentInitEvent.class,
         WorldLoadEvent.class,
+        ClientLoadEvent.class,
+        ClientPreConnectEvent.class,
+        StateChangeEvent.class,
         PlayEvent.class
     );
 
-    public final Seq<String> listeningMethods = Seq.with(
-    );
-
-    public ExtraLogging() throws NoSuchMethodException, SecurityException{
+    public ExtraLogging(){        
         Log.formatter = new ExtraLogFormatter();
+        
+        Log.info("[EL] " + ExtraLogging.class);
 
-        Log.info("[EL] ExtraLogging.ExtraLogging()");
+        registerEvents();
+        wrapMethods();
+    }
+    
+    private void registerEvents(){
+        listeningEvents.each(c -> Events.on(c, e -> {
+            String dataString = "";
+            for (Field datum : c.getDeclaredFields()){
+                try {dataString += " " + datum.get(e);}
+                catch (IllegalArgumentException | IllegalAccessException err){}
+            }
+            
+            Log.info("[EL] " + c.getName() + dataString);
+        }));
+    }
 
-        listeningEvents.each(c -> Events.on(c, e -> Log.info("[EL] " + c.getName()) ));
+    private void wrapMethods(){
+        
     }
 
     @Override
