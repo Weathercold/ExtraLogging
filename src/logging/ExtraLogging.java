@@ -36,7 +36,7 @@ public class ExtraLogging extends Mod{
         listeningEvents.each(c -> Events.on(c, e -> {
             String dataString = "";
             for (Field datum : c.getDeclaredFields()){
-                try {dataString += " " + datum + "=" + datum.get(e);}
+                try {dataString += " " + datum.getName() + "=" + datum.get(e);}
                 catch (IllegalArgumentException | IllegalAccessException err){}
             }
             
