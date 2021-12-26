@@ -14,7 +14,7 @@ public class ExtraLogFormatter extends DefaultLogFormatter{
     @Override
     public String format(String text, boolean useColors, Object... args){
         text = Strings.format(text, args);
-        String ftext = Strings.format(tmpl, timef.format(LocalTime.now()), (text.startsWith("[EL]") ? "goldenrod" : "white"), text);
+        String ftext = Strings.format(tmpl, timef.format(LocalTime.now()), (text.startsWith("[EL]") ? "gold" : "white"), text);
         
         return useColors ? Log.addColors(ftext) : Log.removeColors(ftext);
     }

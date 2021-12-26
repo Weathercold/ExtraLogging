@@ -3,7 +3,6 @@ package logging;
 import java.lang.reflect.Field;
 
 import arc.Events;
-import arc.func.Cons;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Log;
@@ -14,20 +13,18 @@ import mindustry.mod.Mod;
 @SuppressWarnings("unchecked")
 public class ExtraLogging extends Mod{
     public static Seq<Class<? extends Object>> listeningEvents = Seq.with(
-        //In chronological order
         FileTreeInitEvent.class,
         ContentInitEvent.class,
         WorldLoadEvent.class,
         ClientLoadEvent.class,
-        StateChangeEvent.class,
         ClientPreConnectEvent.class,
-        PlayEvent.class
+        StateChangeEvent.class
     );
 
     public ExtraLogging(){        
         Log.formatter = new ExtraLogFormatter();
         
-        Log.info("[EL] " + ExtraLogging.class);
+        Log.info("[EL] ExtraLogging()");
 
         registerEvents();
     }
@@ -40,29 +37,29 @@ public class ExtraLogging extends Mod{
                 catch (IllegalArgumentException | IllegalAccessException err){}
             }
             
-            Log.info("[EL] " + c.getName() + dataString);
+            Log.info("[EL] " + c.getSimpleName() + dataString);
         }));
     }
 
     @Override
     public void init(){
-        Log.info("[EL] ExtraLogging.init()");
+        Log.info("[EL] init()");
 
         Vars.enableConsole = true;
     }
 
     @Override
     public void loadContent(){
-        Log.info("[EL] ExtraLogging.loadContent()");
+        Log.info("[EL] loadContent()");
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler){
-        Log.info("[EL] ExtraLogging.registerServerCommands()");
+        Log.info("[EL] registerServerCommands()");
     }
 
     @Override
     public void registerClientCommands(CommandHandler handler){
-        Log.info("[EL] ExtraLogging.registerClientCommands()");
+        Log.info("[EL] registerClientCommands()");
     }
 }
