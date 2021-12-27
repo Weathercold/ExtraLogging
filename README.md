@@ -1,13 +1,10 @@
 # Extra Logging
-[![Commit Testing](https://github.com/Weathercold/ExtraLogging/actions/workflows/commitTest.yml/badge.svg?branch=master)](https://github.com/Weathercold/ExtraLogging/actions/workflows/commitTest.yml) [![Total Downloads](https://img.shields.io/github/downloads/Weathercold/ExtraLogging/total?color=success&labelColor=gray&label=Downloads&logo=docusign&logoColor=white)](https://github.com/Weathercold/ExtraLogging/releases)\
+[![Commit Testing](https://github.com/Weathercold/ExtraLogging/actions/workflows/commitTest.yml/badge.svg?branch=master)](https://github.com/Weathercold/ExtraLogging/actions/workflows/commitTest.yml) [![Total Downloads](https://img.shields.io/github/downloads/Weathercold/ExtraLogging/total?color=success&labelColor=gray&label=Downloads&logo=docusign&logoColor=white)](https://github.com/Weathercold/ExtraLogging/releases) ![Language](https://img.shields.io/badge/made%20with-Batch-green)\
 Mindustry mod that adds more logging features.\
 I initially made this mod to better understand the order in which the events are triggered, now I decided to add more features and turn this into a mod. Also this is my first *published* mod.
 
 ## Features
-- Changes log level to debug.
-    - Only after the mod is created though
-- Adds timestamp for console messages.
-    - Only after the mod is created though
+- Enables the in-game console.
 - Listens to the following events and prints them to the console:
     - FileTreeInitEvent
     - ContentInitEvent
@@ -15,18 +12,27 @@ I initially made this mod to better understand the order in which the events are
     - ClientLoadEvent
     - ClientPreConnectEvent
     - StateChangeEvent
+- Adds timestamp for console messages.
+    - Only after the mod is created though
 
 ## Details on event trigger order
 ### On client start
 1. ClientCreateEvent
 2. Mod::new
 3. FileTreeInitEvent
+<<<<<<< HEAD
 4. Mod::loadContent
 5. ContentInitEvent
 6. WorldLoadEvent
 7. Mod::registerClientCommands # On servers it's Mod::registerServerCommands
 8. Mod:init
 9. ClientLoadEvent
+=======
+4. WorldLoadEvent
+5. Mod::registerClientCommands # On servers it's Mod::registerServerCommands
+6. Mod::init
+7. ClientLoadEvent
+>>>>>>> d36d3d8 (Description 3)
 
 ### On game start
 1. WorldLoadEvent
@@ -34,6 +40,6 @@ I initially made this mod to better understand the order in which the events are
 3. StateChangeEvent
 
 ## Note
-The order in which the logs are displayed in the in-game console is weird, might have something to do with the log buffer idk\
+The order in which the logs are displayed in the in-game console is weird, might have something to do with the log buffer idk
 
-For some reason the outputs to the Java console are formatted twice which results in duplicated timestamps. If you know how to fix this, please leave a pull request.
+For some reason the outputs to the Java console are formatted twice which results in duplicated timestamps. If you know how to fix this, please make a pull request.
