@@ -1,10 +1,10 @@
 {
     name: extra-logging
     displayName: Extra Logging
-    description: "Adds some extra logging for debugging purposes.\n\nFeatures:\n- Listens to events and prints them to the console\n- Timestamps for console messages"
+    description: "Adds some extra logging for debugging purposes.\n\nFeatures:\n- Listens to events and prints them to the console\n- Timestamps for console messages\n\nSee README.md for more information."
     author: "Weathercold"
 
-    version: 1.0
+    version: 1.1.0
     minGameVersion: 129
 
     main: logging.ExtraLogging
