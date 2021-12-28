@@ -22,7 +22,9 @@ public class ExtraLogging extends Mod{
     );
 
     public ExtraLogging(){        
+        Vars.enableConsole = true;
         Log.formatter = new ExtraLogFormatter();
+        Log.level = Log.LogLevel.debug;
         
         Log.info("[EL] ExtraLogging()");
 
@@ -44,13 +46,6 @@ public class ExtraLogging extends Mod{
     @Override
     public void init(){
         Log.info("[EL] init()");
-
-        Vars.enableConsole = true;
-    }
-
-    @Override
-    public void loadContent(){
-        Log.info("[EL] loadContent()");
     }
 
     @Override
