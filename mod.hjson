@@ -1,8 +1,8 @@
 {
     name: extra-logging
     displayName: Extra Logging
-    description: "Adds more logging features for debugging purposes.\n\nFeatures:\n- Enables the in-game console.\n- Listens to events and prints them to the console.\n- Adds timestamps for console messages."
-    author: Weathercold
+    description: "Adds some extra logging for debugging purposes.\n\nFeatures include:\n    - Enables the in-game console.\n    - Adds customisable log level.\n    - Adds timestamps for console messages.\n    - Listens to events and prints them to the console.\n\nSee README.md for more information."
+    author: "Weathercold"
 
     version: 1.1.0
     minGameVersion: 125
