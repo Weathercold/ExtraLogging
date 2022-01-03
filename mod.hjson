@@ -5,7 +5,7 @@
     author: Weathercold
 
     version: 1.1.0
-    minGameVersion: 129
+    minGameVersion: 125
 
     main: logging.ExtraLogging
     java: true

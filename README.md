@@ -5,34 +5,21 @@ I initially made this mod to better understand the order in which the events are
 
 ## Features
 - Enables the in-game console.
-- Listens to the following events and prints them to the console:
-    - FileTreeInitEvent
-    - ContentInitEvent
-    - WorldLoadEvent
-    - ClientLoadEvent
-    - ClientPreConnectEvent
-    - StateChangeEvent
-- Adds timestamp for console messages.
-    - Only after the mod is created though
+- Adds customisable log level<sup>[1]</sup>.
+- **Adds timestamp for console messages**<sup>[1]</sup>.
+- Listens to important events and prints them to the console.
 
 ## Details on event trigger order
 ### On client start
 1. ClientCreateEvent
 2. Mod::new
 3. FileTreeInitEvent
-<<<<<<< HEAD
 4. Mod::loadContent
 5. ContentInitEvent
 6. WorldLoadEvent
 7. Mod::registerClientCommands # On servers it's Mod::registerServerCommands
 8. Mod:init
 9. ClientLoadEvent
-=======
-4. WorldLoadEvent
-5. Mod::registerClientCommands # On servers it's Mod::registerServerCommands
-6. Mod::init
-7. ClientLoadEvent
->>>>>>> d36d3d8 (Description 3)
 
 ### On game start
 1. WorldLoadEvent
@@ -42,4 +29,6 @@ I initially made this mod to better understand the order in which the events are
 ## Note
 The order in which the logs are displayed in the in-game console is weird, might have something to do with the log buffer idk
 
-For some reason the outputs to the Java console are formatted twice which results in duplicated timestamps. If you know how to fix this, please make a pull request.
+---
+
+[1]: Only after the mod is created though
