@@ -1,60 +1,51 @@
 package logging;
 
+import static logging.ExtraVars.*;
+
 import java.lang.reflect.Field;
 
+import arc.Core;
 import arc.Events;
-import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Log;
+import logging.util.ExtraLogHandler;
 import mindustry.Vars;
-import mindustry.game.EventType.*;
 import mindustry.mod.Mod;
 
-@SuppressWarnings("unchecked")
 public class ExtraLogging extends Mod{
-    public static Seq<Class<? extends Object>> listeningEvents = Seq.with(
-        FileTreeInitEvent.class,
-        ContentInitEvent.class,
-        WorldLoadEvent.class,
-        ClientLoadEvent.class,
-        ClientPreConnectEvent.class,
-        StateChangeEvent.class
-    );
-
     public ExtraLogging(){        
         Vars.enableConsole = true;
-        Log.formatter = new ExtraLogFormatter();
-        Log.level = Log.LogLevel.debug;
+        Log.logger = new ExtraLogHandler();
+        Log.level = Log.LogLevel.values()[Core.settings.getInt("extra-loglevel", 0)];
         
-        Log.info("[EL] ExtraLogging()");
+        if (enableMetaLogging) Log.logger.log(metaLogLevel, "[EL] ExtraLogging()");
 
-        registerEvents();
-    }
-    
-    private void registerEvents(){
+        if (!enableEventLogging) return;
         listeningEvents.each(c -> Events.on(c, e -> {
-            String dataString = "";
-            for (Field datum : c.getDeclaredFields()){
-                try {dataString += " " + datum.getName() + "=" + datum.get(e);}
+            String fields = "";
+            for (Field field : c.getDeclaredFields()){
+                try {fields += " " + field.getName() + "=" + field.get(e);}
                 catch (IllegalArgumentException | IllegalAccessException err){}
             }
             
-            Log.info("[EL] " + c.getSimpleName() + dataString);
+            Log.logger.log(eventLogLevel, "[EL] " + c.getSimpleName() + fields);
         }));
     }
 
     @Override
     public void init(){
-        Log.info("[EL] init()");
+        if (enableMetaLogging) Log.logger.log(metaLogLevel, "[EL] init()");
+
+        settings.init();
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler){
-        Log.info("[EL] registerServerCommands()");
+        if (enableMetaLogging) Log.logger.log(metaLogLevel, "[EL] registerServerCommands()");
     }
 
     @Override
     public void registerClientCommands(CommandHandler handler){
-        Log.info("[EL] registerClientCommands()");
+        if (enableMetaLogging) Log.logger.log(metaLogLevel, "[EL] registerClientCommands()");
     }
 }
