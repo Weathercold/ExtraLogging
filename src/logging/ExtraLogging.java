@@ -18,34 +18,36 @@ public class ExtraLogging extends Mod{
         Log.logger = new ExtraLogHandler();
         Log.level = Log.LogLevel.values()[Core.settings.getInt("extra-loglevel", 0)];
         
-        if (enableMetaLogging) Log.logger.log(metaLogLevel, "[EL] ExtraLogging()");
+        if (enableMetaLogging) Log.log(metaLogLevel, "[EL] ExtraLogging()");
 
         if (!enableEventLogging) return;
         listeningEvents.each(c -> Events.on(c, e -> {
+            if (!enableEventLogging) return;
+
             String fields = "";
             for (Field field : c.getDeclaredFields()){
                 try {fields += " " + field.getName() + "=" + field.get(e);}
                 catch (IllegalArgumentException | IllegalAccessException err){}
             }
             
-            Log.logger.log(eventLogLevel, "[EL] " + c.getSimpleName() + fields);
+            Log.log(eventLogLevel, "[EL] " + c.getSimpleName() + fields);
         }));
     }
 
     @Override
     public void init(){
-        if (enableMetaLogging) Log.logger.log(metaLogLevel, "[EL] init()");
+        if (enableMetaLogging) Log.log(metaLogLevel, "[EL] init()");
 
         settings.init();
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler){
-        if (enableMetaLogging) Log.logger.log(metaLogLevel, "[EL] registerServerCommands()");
+        if (enableMetaLogging) Log.log(metaLogLevel, "[EL] registerServerCommands()");
     }
 
     @Override
     public void registerClientCommands(CommandHandler handler){
-        if (enableMetaLogging) Log.logger.log(metaLogLevel, "[EL] registerClientCommands()");
+        if (enableMetaLogging) Log.log(metaLogLevel, "[EL] registerClientCommands()");
     }
 }
