@@ -7,7 +7,9 @@ I initially made this mod to better understand the order in which the events are
 - Enables the in-game console.
 - Adds customisable log level<sup>[1]</sup>.
 - **Adds timestamp for console messages**<sup>[1]</sup>.
-- Listens to important events and prints them to the console.
+- Removes `[colorname]`s for Java console.
+- Optionally listens to important events and prints them to the console.
+- Various other quality of life improvements.
 
 ## Details on event trigger order
 ### On client start
@@ -27,7 +29,7 @@ I initially made this mod to better understand the order in which the events are
 3. StateChangeEvent
 
 ## Note
-The order in which the logs are displayed in the in-game console is weird, might have something to do with the log buffer idk
+The order in which the logs are displayed in the in-game console is weird, this is a Mindustry issue, might have something to do with the log buffer idk
 
 ---
 
