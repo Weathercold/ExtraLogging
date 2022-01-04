@@ -2,12 +2,15 @@ package logging;
 
 import arc.Core;
 import arc.struct.Seq;
+import arc.util.OS;
 import arc.util.Log.LogLevel;
 import logging.ui.ExtraSettings;
 import mindustry.game.EventType.*;
 
 @SuppressWarnings("unchecked")
 public class ExtraVars{
+    public static boolean coloredJavaConsole = Core.settings.getBool("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid);
+
     public static boolean enableMetaLogging = Core.settings.getBool("extra-enablemetalogging", true);
     public static LogLevel metaLogLevel = LogLevel.values()[Core.settings.getInt("extra-metaloglevel", 0)];
 
