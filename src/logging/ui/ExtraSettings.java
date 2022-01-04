@@ -5,6 +5,7 @@ import arc.Core;
 import arc.Events;
 import arc.scene.ui.layout.Table;
 import arc.util.Log;
+import arc.util.OS;
 import arc.util.Log.LogLevel;
 import logging.ExtraVars;
 import mindustry.Vars;
@@ -28,12 +29,15 @@ public class ExtraSettings{
             Log.level = level;
             return level.name();
         });
+        settings.checkPref("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid, v -> {ExtraVars.coloredJavaConsole = v;});
+        settings.row();
         settings.checkPref("extra-enablemetalogging", true, v -> {ExtraVars.enableMetaLogging = v;});
         settings.sliderPref("extra-metaloglevel", 0, 0, 4, v -> {
             LogLevel level = LogLevel.values()[v];
             ExtraVars.metaLogLevel = level;
             return level.name();
         });
+        settings.row();
         settings.checkPref("extra-enableeventlogging", true, v -> {ExtraVars.enableEventLogging = v;});
         settings.sliderPref("extra-eventloglevel", 0, 0, 4, v -> {
             LogLevel level = LogLevel.values()[v];
