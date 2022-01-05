@@ -9,6 +9,9 @@ import arc.util.Strings;
  * @author Weathercold
  */
 public class ColorUtils{
+
+    //region Fields
+
     public static String
     flush = "\033[H\033[2J",
     reset = "\u001B[0m",
@@ -130,6 +133,9 @@ public class ColorUtils{
     codes = codeMap.keys().toSeq(),
     names = nameMap.keys().toSeq();
 
+    //endregion
+    //region Methods
+
     public static String formatColors(String text, boolean useColors, Object... args){
         text = Strings.format(text, args);
         return useColors ? convertNames(convertCodes(text)) : removeColors(removeNames(removeCodes(text)));
@@ -169,4 +175,6 @@ public class ColorUtils{
         for (String name : names) text = text.replace("[" + name + "]", "");
         return text;
     }
+
+    //endregion
 }

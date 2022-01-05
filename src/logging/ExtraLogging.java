@@ -22,8 +22,6 @@ public class ExtraLogging extends Mod{
 
         if (!enableEventLogging) return;
         listeningEvents.each(c -> Events.on(c, e -> {
-            if (!enableEventLogging) return;
-
             String fields = "";
             for (Field field : c.getDeclaredFields()){
                 try {fields += " " + field.getName() + "=" + field.get(e);}
