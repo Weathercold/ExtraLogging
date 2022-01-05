@@ -1,14 +1,14 @@
 # Extra Logging
 [![Commit Testing](https://github.com/Weathercold/ExtraLogging/actions/workflows/commitTest.yml/badge.svg?branch=master)](https://github.com/Weathercold/ExtraLogging/actions/workflows/commitTest.yml) [![Total Downloads](https://img.shields.io/github/downloads/Weathercold/ExtraLogging/total?color=success&labelColor=gray&label=Downloads&logo=docusign&logoColor=white)](https://github.com/Weathercold/ExtraLogging/releases)\
-Mindustry mod that adds more logging features.\
+Mindustry mod that adds more logging features and improvements.\
 I initially made this mod to better understand the order in which the events are triggered, now I decided to add more features and turn this into a mod. Also this is my first *published* mod.
 
 ## Features
 - Enables the in-game console.
 - Adds customisable log level<sup>[1]</sup>.
 - **Adds timestamp for console messages**<sup>[1]</sup>.
-- Removes `[colorname]`s for Java console.
-- Optionally listens to important events and prints them to the console.
+- **Optionally reenables/disables colored Java console**<sup>[2]</sup>.
+- Optionally prints important event triggers to the console.
 - Various other quality of life improvements.
 
 ## Details on event trigger order
@@ -33,4 +33,5 @@ The order in which the logs are displayed in the in-game console is weird, this 
 
 ---
 
-[1]: Only after the mod is created though
+[1]: Only after the mod is created though\
+[2]: For Windows and Android, you need a modern terminal that supports ANSI color codes. ~~This proves Linux is superior~~

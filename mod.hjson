@@ -1,7 +1,7 @@
 {
     name: extra-logging
     displayName: Extra Logging
-    description: "Adds more debugging features and improvements.\n\nFeatures include:\n    - Enables the in-game console.\n    - Adds customisable log level.\n    - Adds timestamps for console messages.\n    - Listens to events and prints them to the console.\n\nSee README.md for more information."
+    description: "Adds more debugging features and improvements.\n\nFeatures:\n    - Enables the in-game console and sets log level to debug.\n    - Adds timestamps for console messages.\n    - Reenables colored Java console for Windows and Android.\n    - Various other QoL improvements.\n\nSee README.md for more information."
     author: "Weathercold"
 
     version: 1.3.0
