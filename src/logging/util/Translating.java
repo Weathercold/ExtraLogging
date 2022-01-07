@@ -37,7 +37,7 @@ public class Translating{
         buildSend(
             "/detect",
             "{q: '" + text + "'}",
-            res -> success.get(JsonIO.json.fromJson(StringMap.class, res.getResultAsString()).get("translatedText"))
+            res -> success.get(JsonIO.json.fromJson(StringMap.class, res).get("language"))
         );
     }
 
@@ -49,11 +49,9 @@ public class Translating{
             "/languages",
             "", //no body
             res -> {
-                StringMap[] langs = JsonIO.json.fromJson(StringMap[].class, res.getResultAsString());
+                StringMap[] langs = JsonIO.json.fromJson(StringMap[].class, res);
                 Seq<String> codes = new Seq<>(langs.length);
                 for (StringMap lang : langs) codes.add(lang.get("code"));
-
-                if (enableMetaLogging) Log.debug("[EL] Supported languages:\n" + codes);
                 success.get(codes);
             }
         );
@@ -81,23 +79,28 @@ public class Translating{
                 "source", source,
                 "target", target
             )),
-            res -> success.get(JsonIO.json.fromJson(StringMap.class, res.getResultAsString()).get("translatedText"))
+            res -> success.get(JsonIO.json.fromJson(StringMap.class, res).get("translatedText"))
         );
     }
 
-    private static void buildSend(String api, String content, ConsT<HttpResponse, Exception> success){
+    private static void buildSend(String api, String content, Cons<String> success){
+        ConsT<HttpResponse, Exception> successWrap = res -> {
+            String cont = res.getResultAsString();
+            if (enableMetaLogging) Log.debug("[EL] Response from @:[]\n@", servers.first(), cont);
+            success.get(cont);
+        };
         HttpRequest request = Http.post("https://" + servers.first() + api)
                                   .header("Content-Type", "application/json")
                                   .content(content);
         request.error(e -> {
             if (e instanceof HttpStatusException && servers.size >= 2){
                 Log.warn("[EL] Response from @ indicates error, retrying with @:\n@", servers.remove(0),  servers.first(), e);
-                request.submit(success);
+                request.submit(successWrap);
             }
             else{
-                Log.err("[EL] An error occurred during the request, disabling translation for this session:[]\n", e);
+                Log.err("[EL] An error occurred during the request, disabling translation for this session[]", e);
                 ExtraVars.enableTranslation = false;
             }
-        }).submit(success);
+        }).submit(successWrap);
     }
 }

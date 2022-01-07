@@ -36,7 +36,7 @@ public class ExtraVars{
     public static ExtraSettings settings = new ExtraSettings();
 
     static{
-        Log.debug("[EL] Current Mindustry language: @", lang); //Not meta
+        Log.info("[EL] Current Mindustry language: @", lang); //Not meta
         Translating.languages(langs -> {
             if (langs != null && langs.contains(lang)) supportTranslation = true;
             else Log.warn("[EL] Translation is disabled because your current Mindustry display language is not supported by LibreTranslate.");

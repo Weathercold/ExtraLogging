@@ -18,11 +18,11 @@ import mindustry.game.EventType.ClientLoadEvent;
  * @author Weathercold
  */
 public class ExtraLogHandler implements LogHandler{
-    public String stmpl = "@ &lk[@] @@&fr";
+    public String stmpl = "@ &lk[@]&fr @@&fr";
     public String[] stags = {"&lc&fb[D]&fr", "&lb&fb[I]&fr", "&ly&fb[W]&fr", "&lr&fb[E]&fr", "   "};
-    public String tmpl = "@ [grey][@] [@]@";
+    public String tmpl = "@ [grey][@][] @@";
     /** Why isn't terminal font monospaced */
-    public String[] tags = {"[green][D]", "[royal][I] ", "[yellow][W]", "[scarlet][E]", "    "};
+    public String[] tags = {"[green][D][]", "[royal][I][] ", "[yellow][W][]", "[scarlet][E][]", "    "};
     public DateTimeFormatter timef = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
 
     public Seq<String> logBuffer = new Seq<>();
@@ -37,11 +37,11 @@ public class ExtraLogHandler implements LogHandler{
     @Override
     public void log(LogLevel level, String text){
         String time = timef.format(LocalTime.now());
-        String rtext = formatColors(stmpl, coloredJavaConsole, stags[level.ordinal()], time, text.startsWith("[EL]") ? "&ly" : "&fr", text);
+        String rtext = formatColors(stmpl, coloredJavaConsole, stags[level.ordinal()], time, text.startsWith("[EL]") ? "&ly" : "", text);
         System.out.println(rtext);
 
         if(!headless){
-            String ftext = formatCons(tmpl, tags[level.ordinal()], time, text.startsWith("[EL]") ? "accent" : "white", text);
+            String ftext = formatCons(tmpl, tags[level.ordinal()], time, text.startsWith("[EL]") ? "[accent]" : "", text);
             if (clientLoaded) ui.scriptfrag.addMessage(ftext);
             else logBuffer.add(ftext);
         }
