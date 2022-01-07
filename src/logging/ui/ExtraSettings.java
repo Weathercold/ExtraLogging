@@ -1,5 +1,7 @@
 package logging.ui;
 
+import static logging.ExtraVars.*;
+
 import arc.scene.Group;
 import arc.Core;
 import arc.Events;
@@ -7,7 +9,6 @@ import arc.scene.ui.layout.Table;
 import arc.util.Log;
 import arc.util.OS;
 import arc.util.Log.LogLevel;
-import logging.ExtraVars;
 import mindustry.Vars;
 import mindustry.game.EventType.ResizeEvent;
 import mindustry.ui.Styles;
@@ -29,21 +30,18 @@ public class ExtraSettings{
             Log.level = level;
             return level.name();
         });
-        settings.checkPref("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid, v -> {ExtraVars.coloredJavaConsole = v;});
+        settings.checkPref("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid, v -> {coloredJavaConsole = v;});
         settings.row();
-        settings.checkPref("extra-enablemetalogging", true, v -> {ExtraVars.enableMetaLogging = v;});
-        settings.sliderPref("extra-metaloglevel", 0, 0, 4, v -> {
-            LogLevel level = LogLevel.values()[v];
-            ExtraVars.metaLogLevel = level;
-            return level.name();
-        });
+        settings.checkPref("extra-enablemetalogging", false, v -> {enableMetaLogging = v;});
         settings.row();
-        settings.checkPref("extra-enableeventlogging", true, v -> {ExtraVars.enableEventLogging = v;});
+        settings.checkPref("extra-enableeventlogging", false, v -> {enableEventLogging = v;});
         settings.sliderPref("extra-eventloglevel", 0, 0, 4, v -> {
             LogLevel level = LogLevel.values()[v];
-            ExtraVars.eventLogLevel = level;
+            eventLogLevel = level;
             return level.name();
         });
+        settings.row();
+        if (supportTranslation) settings.checkPref("extra-enabletranslation", true, v -> {enableTranslation = v;});
 
         dialog.cont.center().add(settings);
 
