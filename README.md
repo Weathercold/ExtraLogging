@@ -8,6 +8,7 @@ I initially made this mod to better understand the order in which the events are
 - Adds customisable log level<sup>[1]</sup>.
 - **Adds timestamp for console messages**<sup>[1]</sup>.
 - **Optionally reenables/disables colored Java console**<sup>[2]</sup>.
+- Fixes log display order (vanilla issue).
 - Optionally prints important event triggers to the console.
 - Various other quality of life improvements.
 
@@ -27,9 +28,6 @@ I initially made this mod to better understand the order in which the events are
 1. WorldLoadEvent
 2. ClientPreConnectEvent       # Only if multiplayer
 3. StateChangeEvent
-
-## Note
-The order in which the logs are displayed in the in-game console is weird, this is a Mindustry issue, might have something to do with the log buffer idk
 
 ---
 
