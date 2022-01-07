@@ -25,8 +25,11 @@ public class ExtraLogHandler implements LogHandler{
     public String[] tags = {"[green][D]", "[royal][I] ", "[yellow][W]", "[scarlet][E]", "    "};
     public DateTimeFormatter timef = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
 
-    Seq<String> logBuffer = new Seq<>();
+    public Seq<String> logBuffer = new Seq<>();
+    public static boolean clientLoaded = false;
     
+    static{Events.on(ClientLoadEvent.class, e -> {clientLoaded = true;});}
+
     public ExtraLogHandler(){
         Events.on(ClientLoadEvent.class, e -> logBuffer.each(ui.scriptfrag::addMessage));
     }
@@ -39,8 +42,8 @@ public class ExtraLogHandler implements LogHandler{
 
         if(!headless){
             String ftext = formatCons(tmpl, tags[level.ordinal()], time, text.startsWith("[EL]") ? "accent" : "white", text);
-            if (ui == null || ui.scriptfrag == null) logBuffer.add(ftext);
-            else ui.scriptfrag.addMessage(ftext);
+            if (clientLoaded) ui.scriptfrag.addMessage(ftext);
+            else logBuffer.add(ftext);
         }
     }
 }
