@@ -9,8 +9,10 @@ import arc.Events;
 import arc.util.CommandHandler;
 import arc.util.Log;
 import logging.util.ExtraLogHandler;
+import logging.util.Translating;
 import mindustry.Vars;
 import mindustry.mod.Mod;
+import mindustry.ui.fragments.ChatFragment;
 
 public class ExtraLogging extends Mod{
     public ExtraLogging(){        
@@ -18,10 +20,9 @@ public class ExtraLogging extends Mod{
         Log.logger = new ExtraLogHandler();
         Log.level = Log.LogLevel.values()[Core.settings.getInt("extra-loglevel", 0)];
         
-        if (enableMetaLogging) Log.log(metaLogLevel, "[EL] ExtraLogging()");
-
-        if (!enableEventLogging) return;
-        listeningEvents.each(c -> Events.on(c, e -> {
+        if (enableMetaLogging) Log.debug("[EL] ExtraLogging()");
+        //Register events
+        if (enableEventLogging) listeningEvents.each(c -> Events.on(c, e -> {
             String fields = "";
             for (Field field : c.getDeclaredFields()){
                 try {fields += " " + field.getName() + "=" + field.get(e);}
@@ -34,18 +35,25 @@ public class ExtraLogging extends Mod{
 
     @Override
     public void init(){
-        if (enableMetaLogging) Log.log(metaLogLevel, "[EL] init()");
-
+        if (enableMetaLogging) Log.debug("[EL] init()");
         settings.init();
+        //Override chat fragment
+        if (enableTranslation) Vars.ui.chatfrag = new ChatFragment(){
+            @Override
+            public void addMessage(String message, String sender){
+                super.addMessage(message, sender);
+                if (enableTranslation) Translating.translate(message, lang, translation -> {if (!translation.equals(message)) super.addMessage(translation, "[gray]Translation");});
+            }
+        };
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler){
-        if (enableMetaLogging) Log.log(metaLogLevel, "[EL] registerServerCommands()");
+        if (enableMetaLogging) Log.debug("[EL] registerServerCommands()");
     }
 
     @Override
     public void registerClientCommands(CommandHandler handler){
-        if (enableMetaLogging) Log.log(metaLogLevel, "[EL] registerClientCommands()");
+        if (enableMetaLogging) Log.debug("[EL] registerClientCommands()");
     }
 }
