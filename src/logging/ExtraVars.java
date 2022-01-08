@@ -13,9 +13,11 @@ import mindustry.game.EventType.*;
 
 @SuppressWarnings("unchecked")
 public class ExtraVars{
+    /** Whether to ensure Foo compatibility. */
+    public static boolean isFoo;
     public static boolean coloredJavaConsole = Core.settings.getBool("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid);
 
-    public static boolean enableMetaLogging = Core.settings.getBool("extra-enablemetalogging", false);
+    public static boolean enableMetaDebugging = Core.settings.getBool("extra-enablemetadebugging", false);
 
     public static boolean enableEventLogging = Core.settings.getBool("extra-enableeventlogging", false);
     public static LogLevel eventLogLevel = LogLevel.values()[Core.settings.getInt("extra-metaloglevel", 0)];
@@ -36,11 +38,10 @@ public class ExtraVars{
     public static ExtraSettings settings = new ExtraSettings();
 
     static{
-        Log.info("[EL] Current Mindustry language: @", lang); //Not meta
         Translating.languages(langs -> {
             if (langs != null && langs.contains(lang)) supportTranslation = true;
             else Log.warn("[EL] Translation is disabled because your current Mindustry display language is not supported by LibreTranslate.");
+            enableTranslation = Core.settings.getBool("extra-enabletranslation", true) && supportTranslation;
         });
-        enableTranslation = Core.settings.getBool("extra-enabletranslation", true) && supportTranslation;
     }
 }

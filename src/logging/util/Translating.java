@@ -86,7 +86,7 @@ public class Translating{
     private static void buildSend(String api, String content, Cons<String> success){
         ConsT<HttpResponse, Exception> successWrap = res -> {
             String cont = res.getResultAsString();
-            if (enableMetaLogging) Log.debug("[EL] Response from @:[]\n@", servers.first(), cont);
+            if (enableMetaDebugging) Log.debug("[EL] Response from @:[]\n@", servers.first(), cont);
             success.get(cont);
         };
         HttpRequest request = Http.post("https://" + servers.first() + api)
@@ -94,11 +94,11 @@ public class Translating{
                                   .content(content);
         request.error(e -> {
             if (e instanceof HttpStatusException && servers.size >= 2){
-                Log.warn("[EL] Response from @ indicates error, retrying with @:\n@", servers.remove(0),  servers.first(), e);
+                Log.warn("[EL] Response from @ indicates error, retrying with @:[]\n@", servers.remove(0),  servers.first(), e);
                 request.submit(successWrap);
             }
             else{
-                Log.err("[EL] An error occurred during the request, disabling translation for this session[]", e);
+                Log.err("[EL] A network error occurred, disabling translation for this session[]", e);
                 ExtraVars.enableTranslation = false;
             }
         }).submit(successWrap);

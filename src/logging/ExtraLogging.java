@@ -8,11 +8,10 @@ import arc.Core;
 import arc.Events;
 import arc.util.CommandHandler;
 import arc.util.Log;
+import logging.ui.ExtraChatFragment;
 import logging.util.ExtraLogHandler;
-import logging.util.Translating;
 import mindustry.Vars;
 import mindustry.mod.Mod;
-import mindustry.ui.fragments.ChatFragment;
 
 public class ExtraLogging extends Mod{
     public ExtraLogging(){        
@@ -20,7 +19,9 @@ public class ExtraLogging extends Mod{
         Log.logger = new ExtraLogHandler();
         Log.level = Log.LogLevel.values()[Core.settings.getInt("extra-loglevel", 0)];
         
-        if (enableMetaLogging) Log.debug("[EL] ExtraLogging()");
+        if (enableMetaDebugging) Log.debug("[EL] ExtraLogging()");
+        Log.info("[EL] Current Mindustry language: @", lang); //Not meta
+        
         //Register events
         if (enableEventLogging) listeningEvents.each(c -> Events.on(c, e -> {
             String fields = "";
@@ -35,25 +36,18 @@ public class ExtraLogging extends Mod{
 
     @Override
     public void init(){
-        if (enableMetaLogging) Log.debug("[EL] init()");
+        if (enableMetaDebugging) Log.debug("[EL] init()");
         settings.init();
-        //Override chat fragment
-        if (enableTranslation) Vars.ui.chatfrag = new ChatFragment(){
-            @Override
-            public void addMessage(String message, String sender){
-                super.addMessage(message, sender);
-                if (enableTranslation) Translating.translate(message, lang, translation -> {if (!translation.equals(message)) super.addMessage(translation, "[gray]Translation");});
-            }
-        };
+        if (enableTranslation) Vars.ui.chatfrag = new ExtraChatFragment();
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler){
-        if (enableMetaLogging) Log.debug("[EL] registerServerCommands()");
+        if (enableMetaDebugging) Log.debug("[EL] registerServerCommands()");
     }
 
     @Override
     public void registerClientCommands(CommandHandler handler){
-        if (enableMetaLogging) Log.debug("[EL] registerClientCommands()");
+        if (enableMetaDebugging) Log.debug("[EL] registerClientCommands()");
     }
 }
