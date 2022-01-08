@@ -32,7 +32,7 @@ public class ExtraSettings{
         });
         settings.checkPref("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid, v -> {coloredJavaConsole = v;});
         settings.row();
-        settings.checkPref("extra-enablemetalogging", false, v -> {enableMetaLogging = v;});
+        settings.checkPref("extra-enablemetadebugging", false, v -> {enableMetaDebugging = v;});
         settings.row();
         settings.checkPref("extra-enableeventlogging", false, v -> {enableEventLogging = v;});
         settings.sliderPref("extra-eventloglevel", 0, 0, 4, v -> {
