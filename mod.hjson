@@ -4,7 +4,7 @@
     description: "Adds more debugging features and improvements.\n\nFeatures:\n    - Enables the in-game console and sets log level to debug.\n    - Adds timestamps for console messages.\n    - Reenables colored Java console for Windows and Android.\n    - Various other QoL improvements.\n\nSee README.md for more information."
     author: "Weathercold"
 
-    version: 1.3.1
+    version: 1.4.0
     minGameVersion: 125
 
     main: logging.ExtraLogging

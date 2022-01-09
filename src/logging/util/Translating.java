@@ -21,7 +21,8 @@ import mindustry.io.JsonIO;
  */
 public class Translating{
     public static Seq<String> servers = Seq.with(
-        "libretranslate.com",
+        //"libretranslate.com", requires API key :(
+        "translate.argosopentech.com",
         "translate.api.skitzen.com",
         "trans.zillyhuhn.com",
         "translate.mentality.rip" //sus link
@@ -36,8 +37,8 @@ public class Translating{
         text = formatColors(text, false);
         buildSend(
             "/detect",
-            "{q: '" + text + "'}",
-            res -> success.get(JsonIO.json.fromJson(StringMap.class, res).get("language"))
+            "{\"q\":\"" + text + "\"}",
+            res -> success.get(JsonIO.json.fromJson(StringMap[].class, res)[0].get("language"))
         );
     }
 
@@ -72,7 +73,12 @@ public class Translating{
         if (source == target){success.get(text); return;}
 
         text = formatColors(text, false);
-        buildSend(
+        Log.debug(JsonIO.json.toJson(StringMap.of(
+            "q", text,
+            "source", source,
+            "target", target
+        )));
+        /*buildSend(
             "/translate",
             JsonIO.json.toJson(StringMap.of(
                 "q", text,
@@ -80,7 +86,7 @@ public class Translating{
                 "target", target
             )),
             res -> success.get(JsonIO.json.fromJson(StringMap.class, res).get("translatedText"))
-        );
+        );*/
     }
 
     private static void buildSend(String api, String content, Cons<String> success){
@@ -94,11 +100,19 @@ public class Translating{
                                   .content(content);
         request.error(e -> {
             if (e instanceof HttpStatusException && servers.size >= 2){
-                Log.warn("[EL] Response from @ indicates error, retrying with @:[]\n@", servers.remove(0),  servers.first(), e);
-                request.submit(successWrap);
+                HttpStatusException hse = (HttpStatusException)e;
+                Log.warn("[EL] Response from @ indicates error (@ @), retrying with @:[]\n@",
+                         servers.remove(0) + api, hse.status.code, hse.status, servers.first(), hse.response.getResultAsString().replace("\n", ""));
+                request.url("https://" + servers.first() + api).submit(successWrap);
+            }
+            else if (e instanceof HttpStatusException){
+                HttpStatusException hse = (HttpStatusException)e;
+                Log.err("[EL] Response from @ indicates error (@ @), disabling translation for this session:[]\n@",
+                        servers.first() + api, hse.status.code, hse.status, hse.response.getResultAsString().replace("\n", ""));
+                ExtraVars.enableTranslation = false;
             }
             else{
-                Log.err("[EL] A network error occurred, disabling translation for this session[]", e);
+                Log.err("[EL] An unknown error occurred, disabling translation for this session:[]\n" + e);
                 ExtraVars.enableTranslation = false;
             }
         }).submit(successWrap);
