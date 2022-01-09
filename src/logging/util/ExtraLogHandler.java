@@ -19,7 +19,7 @@ import mindustry.game.EventType.ClientLoadEvent;
  */
 public class ExtraLogHandler implements LogHandler{
     public String stmpl = "@ &lk[@]&fr @@&fr";
-    public String[] stags = {"&lc&fb[D]&fr", "&lb&fb[I]&fr", "&ly&fb[W]&fr", "&lr&fb[E]&fr", "   "};
+    public String[] stags = {"&lg&fb[D]&fr", "&lb&fb[I]&fr", "&ly&fb[W]&fr", "&lr&fb[E]&fr", "   "};
     public String tmpl = "@ [grey][@][] @@";
     /** Why isn't terminal font monospaced */
     public String[] tags = {"[green][D][]", "[royal][I][] ", "[yellow][W][]", "[scarlet][E][]", "    "};
