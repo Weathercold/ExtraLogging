@@ -15,8 +15,7 @@ import arc.util.Log;
 import arc.util.Http.HttpRequest;
 import arc.util.Http.HttpResponse;
 import arc.util.Http.HttpStatusException;
-import arc.util.serialization.Json;
-import arc.util.serialization.JsonValue;
+import arc.util.serialization.JsonWriter.OutputType;
 import logging.ExtraVars;
 import mindustry.io.JsonIO;
 
@@ -33,7 +32,8 @@ public class Translating{
         "translate.mentality.rip" //sus link
     );
 
-    static{JsonIO.json.setSerializer(StringMap.class, new StringMapSerializer());}
+    //Might break certain mods idk
+    static{JsonIO.json.setOutputType(OutputType.json);}
 
     /** Get the language of the specified text, then run success if no errors occurred.
      * @param success The callback to run if no errors occurred.
@@ -86,26 +86,21 @@ public class Translating{
         if (source == target){success.get(text); return;}
 
         text = parseMsg(text);
-        Log.debug(JsonIO.json.toJson(StringMap.of(
-            "q", text,
-            "source", source,
-            "target", target
-        ), StringMap.class, String.class));
-        /*buildSend(
+        buildSend(
             "/translate",
             JsonIO.json.toJson(StringMap.of(
                 "q", text,
                 "source", source,
                 "target", target
-            )),
+            ), StringMap.class, String.class),
             res -> success.get(JsonIO.json.fromJson(StringMap.class, res).get("translatedText"))
-        );*/
+        );
     }
 
     private static void buildSend(String api, String content, Cons<String> success){
         ConsT<HttpResponse, Exception> successWrap = res -> {
             String cont = res.getResultAsString();
-            if (enableMetaDebugging) Log.debug("[EL] Response from @:[]\n@", servers.first(), cont);
+            if (enableMetaDebugging) Log.debug("[EL] Response from @:[]\n@", servers.first(), cont.replace("\n", ""));
             success.get(cont);
         };
         HttpRequest request = Http.post("https://" + servers.first() + api)
@@ -132,20 +127,5 @@ public class Translating{
                 ExtraVars.enableTranslation = false;
             }
         }).submit(successWrap);
-    }
-
-    @SuppressWarnings("rawtypes")
-    public static class StringMapSerializer implements Json.Serializer<StringMap>{
-        @Override
-        public StringMap read(Json json, JsonValue jsonData, Class type){
-            StringMap map = new StringMap();
-            for (JsonValue child : jsonData) map.put(child.name, child.asString());
-            return map;
-        }
-        
-        @Override
-        public void write(Json json, StringMap map, Class knownType){
-            map.each((k, v) -> json.writeValue("\"" + k + "\"", "\"" + v + "\""));
-        }
     }
 }
