@@ -76,7 +76,7 @@ public class ColorUtils{
 
     nameMap = StringMap.of(
         "", reset, //Works most of the time
-        "clear", "", //Not possible
+        "clear", "", //No corresponding color
         "black", black,
 
         "white", white,
