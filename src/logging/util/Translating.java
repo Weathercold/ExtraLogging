@@ -21,6 +21,7 @@ import mindustry.io.JsonIO;
 
 /** Partial wrapper for the <a href="https://libretranslate.com">LibreTranslate API</a><p>
  * Technically this falls into the <a href="https://github.com/LibreTranslate/LibreTranslate#can-i-use-your-api-server-at-libretranslatecom-for-my-application-in-production">"infrequent use"</a> category (I hope so)<p>
+ * <!-- Is this how I'm supposed to write async --->
  * @author Weathercold
  */
 public class Translating{
