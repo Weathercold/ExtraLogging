@@ -1,7 +1,10 @@
 package logging.util;
 
 import static logging.ExtraVars.*;
-import static logging.util.ColorUtils.formatColors;
+import static logging.util.ColorUtils.*;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import arc.func.Cons;
 import arc.func.ConsT;
@@ -12,6 +15,8 @@ import arc.util.Log;
 import arc.util.Http.HttpRequest;
 import arc.util.Http.HttpResponse;
 import arc.util.Http.HttpStatusException;
+import arc.util.serialization.Json;
+import arc.util.serialization.JsonValue;
 import logging.ExtraVars;
 import mindustry.io.JsonIO;
 
@@ -28,13 +33,18 @@ public class Translating{
         "translate.mentality.rip" //sus link
     );
 
+    static{JsonIO.json.setSerializer(StringMap.class, new StringMapSerializer());}
+
     /** Get the language of the specified text, then run success if no errors occurred.
      * @param success The callback to run if no errors occurred.
     */
     public static void detect(String text, Cons<String> success){
-        if (text == null){success.get(null); return;}
+        if (text == null){
+            Log.err(new NullPointerException("Detect text cannot be null."));
+            return;
+        }
 
-        text = formatColors(text, false);
+        text = parseMsg(text);
         buildSend(
             "/detect",
             "{\"q\":\"" + text + "\"}",
@@ -69,15 +79,18 @@ public class Translating{
      * @param success The callback to run if no errors occurred.
      */
     public static void translate(String text, String source, String target, Cons<String> success){
-        if (text == null || source == null || target == null){success.get(null); return;}
+        if (text == null || source == null || target == null){
+            Log.err(new NullPointerException("Translate arguments cannot be null."));
+            return;
+        }
         if (source == target){success.get(text); return;}
 
-        text = formatColors(text, false);
+        text = parseMsg(text);
         Log.debug(JsonIO.json.toJson(StringMap.of(
             "q", text,
             "source", source,
             "target", target
-        )));
+        ), StringMap.class, String.class));
         /*buildSend(
             "/translate",
             JsonIO.json.toJson(StringMap.of(
@@ -112,9 +125,27 @@ public class Translating{
                 ExtraVars.enableTranslation = false;
             }
             else{
-                Log.err("[EL] An unknown error occurred, disabling translation for this session:[]\n" + e);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                Log.err("[EL] An unknown error occurred, disabling translation for this session:[]\n" + sw);
                 ExtraVars.enableTranslation = false;
             }
         }).submit(successWrap);
+    }
+
+    @SuppressWarnings("rawtypes")
+    public static class StringMapSerializer implements Json.Serializer<StringMap>{
+        @Override
+        public StringMap read(Json json, JsonValue jsonData, Class type){
+            StringMap map = new StringMap();
+            for (JsonValue child : jsonData) map.put(child.name, child.asString());
+            return map;
+        }
+        
+        @Override
+        public void write(Json json, StringMap map, Class knownType){
+            map.each((k, v) -> json.writeValue("\"" + k + "\"", "\"" + v + "\""));
+        }
     }
 }
