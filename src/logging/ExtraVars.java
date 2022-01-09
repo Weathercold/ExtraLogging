@@ -14,7 +14,7 @@ import mindustry.game.EventType.*;
 @SuppressWarnings("unchecked")
 public class ExtraVars{
     /** Whether to ensure Foo compatibility. */
-    public static boolean isFoo;
+    public static boolean isFoo = false;
     public static boolean coloredJavaConsole = Core.settings.getBool("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid);
 
     public static boolean enableMetaDebugging = Core.settings.getBool("extra-enablemetadebugging", false);
