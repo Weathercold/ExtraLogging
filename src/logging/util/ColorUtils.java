@@ -75,8 +75,8 @@ public class ColorUtils{
     ),
 
     nameMap = StringMap.of(
-        "", reset,
-        "clear", "",
+        "", reset, //Works most of the time
+        "clear", "", //Not possible
         "black", black,
 
         "white", white,
@@ -146,6 +146,11 @@ public class ColorUtils{
         return removeColors(removeCodes(Strings.format(text, args)));
     }
     
+    /** Parse chat message. */
+    public static String parseMsg(String text){
+        return text.replaceFirst("\\?\\?$", "").replaceFirst("^.*: ", "");
+    }
+
     /** Convert codes to colors. */
     public static String convertCodes(String text){
         for (Entry<String, String> e : codeMap) text = text.replace("&" + e.key, e.value);
@@ -155,7 +160,7 @@ public class ColorUtils{
     /** Convert names to colors. */
     public static String convertNames(String text){
         for (Entry<String, String> e : nameMap) text = text.replace("[" + e.key + "]", e.value);
-        return text;
+        return text.replaceAll("\\[#[0-9a-f]{6,8}]", ""); //It's hard to convert custom colors
     }
 
     /** Remove all colors. */
@@ -173,7 +178,12 @@ public class ColorUtils{
     /** Remove all names. */
     public static String removeNames(String text){
         for (String name : names) text = text.replace("[" + name + "]", "");
-        return text;
+        return text.replaceAll("\\[#[0-9a-f]{6,8}]", "");
+    }
+
+    //ColorUtils? more like FormatUtils
+    public static String removeBrackets(String text){
+        return text.replaceAll("\\[\\w*]", "");
     }
 
     //endregion

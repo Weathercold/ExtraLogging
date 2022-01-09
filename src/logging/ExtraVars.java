@@ -6,15 +6,20 @@ import arc.Core;
 import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.OS;
+import arc.util.Reflect;
 import arc.util.Log.LogLevel;
 import logging.ui.ExtraSettings;
 import logging.util.Translating;
+import mindustry.Vars;
+import mindustry.core.Version;
 import mindustry.game.EventType.*;
 
 @SuppressWarnings("unchecked")
 public class ExtraVars{
     /** Whether to ensure Foo compatibility. */
-    public static boolean isFoo = false;
+    public static boolean isFoo;
+    public static String lang = Locale.getDefault().getLanguage();
+
     public static boolean coloredJavaConsole = Core.settings.getBool("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid);
 
     public static boolean enableMetaDebugging = Core.settings.getBool("extra-enablemetadebugging", false);
@@ -31,17 +36,22 @@ public class ExtraVars{
         DisposeEvent.class
     );
 
-    public static String lang = Locale.getDefault().getLanguage();
-    public static boolean supportTranslation = false;
-    public static boolean enableTranslation;
+    public static boolean supportTranslation;
+    public static boolean enableTranslation = false;
 
     public static ExtraSettings settings = new ExtraSettings();
 
     static{
+        try{Reflect.get(Version.class, "clientVersion"); isFoo = true;}
+        catch (RuntimeException e){isFoo = false;}
+        
         Translating.languages(langs -> {
-            if (langs != null && langs.contains(lang)) supportTranslation = true;
-            else Log.warn("[EL] Translation is disabled because your current Mindustry display language is not supported by LibreTranslate.");
-            enableTranslation = Core.settings.getBool("extra-enabletranslation", true) && supportTranslation;
+            supportTranslation = langs.contains(lang);
+            
+            if (!supportTranslation && Core.settings.getBool("extra-enabletranslation", true)) Log.warn("[EL] Translation is disabled because your current Mindustry display language is not supported by LibreTranslate.");
+            else if (!supportTranslation) Log.info("[EL] Translation is disabled because your current Mindustry display language is not supported by LibreTranslate.");
+            else if (Vars.headless && Core.settings.getBool("extra-enabletranslation", true)) Log.warn("[EL] Translation doesn't work on headless servers.");
+            else enableTranslation = true;
         });
     }
 }
