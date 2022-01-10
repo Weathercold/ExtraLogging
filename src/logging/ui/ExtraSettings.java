@@ -30,18 +30,18 @@ public class ExtraSettings{
             Log.level = level;
             return level.name();
         });
-        settings.checkPref("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid, v -> {coloredJavaConsole = v;});
+        settings.checkPref("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid, v -> coloredJavaConsole = v);
         settings.row();
-        settings.checkPref("extra-enablemetadebugging", false, v -> {enableMetaDebugging = v;});
+        settings.checkPref("extra-enablemetadebugging", false, v -> enableMetaDebugging = v);
         settings.row();
-        settings.checkPref("extra-enableeventlogging", false, v -> {enableEventLogging = v;});
+        settings.checkPref("extra-enableeventlogging", false, v -> enableEventLogging = v);
         settings.sliderPref("extra-eventloglevel", 0, 0, 4, v -> {
             LogLevel level = LogLevel.values()[v];
             eventLogLevel = level;
             return level.name();
         });
         settings.row();
-        if (supportTranslation) settings.checkPref("extra-enabletranslation", true, v -> {enableTranslation = v;});
+        settings.checkPref("extra-enabletranslation", true, v -> enableTranslation = v);
 
         dialog.cont.center().add(settings);
 

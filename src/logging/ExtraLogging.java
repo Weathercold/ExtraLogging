@@ -11,6 +11,7 @@ import arc.util.CommandHandler;
 import arc.util.Log;
 import arc.util.Reflect;
 import logging.ui.ExtraChatFragment;
+import logging.util.ColorUtils;
 import logging.util.ExtraLogHandler;
 import logging.util.Translating;
 import mindustry.Vars;
@@ -44,9 +45,9 @@ public class ExtraLogging extends Mod{
         if (enableTranslation && !isFoo) Vars.ui.chatfrag = new ExtraChatFragment();
         else if (enableTranslation) try{
             Events.on(Class.forName("mindustry.game.EventType$PlayerChatEventClient"), e -> {
-                String message = Reflect.get(e, "message");
+                String message = ColorUtils.parseMsg(Reflect.get(e, "message"));
                 Translating.translate(message, lang, translation -> {
-                    if (!translation.equals(message)) Reflect.invoke(Vars.ui.chatfrag, "addMessage", new Object[]{translation, "[gray]Translation[]", Color.sky}, String.class, String.class, Color.class);
+                    if (!translation.equals(message)) Reflect.invoke(Vars.ui.chatfrag, "addMessage", new Object[]{translation, "Translation", Color.slate}, String.class, String.class, Color.class);
                 });
             });
         }catch (ClassNotFoundException e){Log.err(e);}

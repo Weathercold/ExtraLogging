@@ -18,12 +18,11 @@ import mindustry.game.EventType.*;
 public class ExtraVars{
     /** Whether to ensure Foo compatibility. */
     public static boolean isFoo;
-    public static String lang = Locale.getDefault().getLanguage();
-
+    
     public static boolean coloredJavaConsole = Core.settings.getBool("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid);
-
+    
     public static boolean enableMetaDebugging = Core.settings.getBool("extra-enablemetadebugging", false);
-
+    
     public static boolean enableEventLogging = Core.settings.getBool("extra-enableeventlogging", false);
     public static LogLevel eventLogLevel = LogLevel.values()[Core.settings.getInt("extra-metaloglevel", 0)];
     public static Seq<Class<? extends Object>> listeningEvents = Seq.with(
@@ -34,10 +33,10 @@ public class ExtraVars{
         ClientPreConnectEvent.class,
         StateChangeEvent.class,
         DisposeEvent.class
-    );
-
-    public static boolean supportTranslation;
-    public static boolean enableTranslation = false;
+        );
+        
+    public static String lang = Locale.getDefault().getLanguage();
+    public static boolean enableTranslation = Core.settings.getBool("extra-enabletranslation", true);
 
     public static ExtraSettings settings = new ExtraSettings();
 
@@ -46,12 +45,12 @@ public class ExtraVars{
         catch (RuntimeException e){isFoo = false;}
         
         Translating.languages(langs -> {
-            supportTranslation = langs.contains(lang);
+            lang = langs.contains(lang) ? lang : "en";
             
-            if (!supportTranslation && Core.settings.getBool("extra-enabletranslation", true)) Log.warn("[EL] Translation is disabled because your current Mindustry display language is not supported by LibreTranslate.");
-            else if (!supportTranslation) Log.info("[EL] Translation is disabled because your current Mindustry display language is not supported by LibreTranslate.");
-            else if (Vars.headless && Core.settings.getBool("extra-enabletranslation", true)) Log.warn("[EL] Translation doesn't work on headless servers.");
-            else enableTranslation = true;
+            if (enableTranslation && Vars.headless){
+                Log.warn("[EL] Translation doesn't work on headless servers.");
+                enableTranslation = false;
+            }
         });
     }
 }
