@@ -1,7 +1,6 @@
 package logging.util;
 
 import static logging.ExtraVars.*;
-import static logging.util.ColorUtils.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -45,7 +44,6 @@ public class Translating{
             return;
         }
 
-        text = parseMsg(text);
         buildSend(
             "/detect",
             "{\"q\":\"" + text + "\"}",
@@ -86,7 +84,6 @@ public class Translating{
         }
         if (source == target){success.get(text); return;}
 
-        text = parseMsg(text);
         buildSend(
             "/translate",
             JsonIO.json.toJson(StringMap.of(
