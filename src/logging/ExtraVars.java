@@ -35,22 +35,30 @@ public class ExtraVars{
         DisposeEvent.class
         );
         
-    public static String lang = Locale.getDefault().getLanguage();
+    public static String targetLang = Locale.getDefault().getLanguage();
+    public static Seq<String> supportedLangs;
     public static boolean enableTranslation = Core.settings.getBool("extra-enabletranslation", true);
 
     public static ExtraSettings settings = new ExtraSettings();
 
     static{
-        try{Reflect.get(Version.class, "clientVersion"); isFoo = true;}
-        catch (RuntimeException e){isFoo = false;}
+        try{
+            Reflect.get(Version.class, "clientVersion");
+            Log.info("[EL] Foo has built-in translation (yes, also by me). Disabling EL's translation.");
+            enableTranslation = false;
+            isFoo = true;
+        }
+        catch (RuntimeException e){
+            isFoo = false;
         
-        Translating.languages(langs -> {
-            lang = langs.contains(lang) ? lang : "en";
-            
-            if (enableTranslation && Vars.headless){
-                Log.warn("[EL] Translation doesn't work on headless servers.");
+            if (!Vars.headless) Translating.languages(langs -> {
+                supportedLangs = langs;
+                targetLang = langs.contains(targetLang) ? targetLang : "en";
+            });
+            else{
+                Log.info("[EL] Translation doesn't work on headless servers.");
                 enableTranslation = false;
             }
-        });
+        }
     }
 }

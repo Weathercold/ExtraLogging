@@ -41,7 +41,8 @@ public class ExtraSettings{
             return level.name();
         });
         settings.row();
-        settings.checkPref("extra-enabletranslation", true, v -> enableTranslation = v);
+        if (!isFoo) settings.checkPref("extra-enabletranslation", true, v -> enableTranslation = v);
+        else settings.add("@extra-logging.fooNotice");
 
         dialog.cont.center().add(settings);
 

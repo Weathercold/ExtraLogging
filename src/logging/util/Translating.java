@@ -1,18 +1,16 @@
 package logging.util;
 
-import static logging.ExtraVars.*;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import arc.func.Cons;
 import arc.func.ConsT;
+import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.struct.StringMap;
 import arc.util.Http;
 import arc.util.Log;
+import arc.util.Timer;
 import arc.util.Http.HttpRequest;
 import arc.util.Http.HttpResponse;
+import arc.util.Http.HttpStatus;
 import arc.util.Http.HttpStatusException;
 import arc.util.serialization.JsonWriter.OutputType;
 import logging.ExtraVars;
@@ -24,12 +22,12 @@ import mindustry.io.JsonIO;
  * @author Weathercold
  */
 public class Translating{
-    public static Seq<String> servers = Seq.with(
-        //"libretranslate.com", requires API key :(
-        "translate.argosopentech.com",
-        "translate.api.skitzen.com",
-        "trans.zillyhuhn.com",
-        "translate.mentality.rip" //sus link
+    public static volatile ObjectMap<String, Boolean> servers = ObjectMap.of(
+        //"libretranslate.com", false, requires API key :(
+        "translate.api.skitzen.com", false,
+        "translate.mentality.rip", false, //sus link
+        "translate.argosopentech.com", false,
+        "trans.zillyhuhn.com", false
     );
 
     //Might break certain mods idk
@@ -95,33 +93,38 @@ public class Translating{
         );
     }
 
-    private static void buildSend(String api, String content, Cons<String> success){
+    private static void buildSend(String api, String content, Cons<String> success) {
+        String server = servers.findKey(false, false);
+        if (server == null) {
+            Log.warn("Rate limit reached on all servers. Aborting translation.");
+            return;
+        }
         ConsT<HttpResponse, Exception> successWrap = res -> {
             String cont = res.getResultAsString();
-            if (enableMetaDebugging) Log.debug("[EL] Response from @:[]\n@", servers.first(), cont.replace("\n", ""));
+            Log.debug("Response from @:\n@", server, cont.replace("\n", ""));
             success.get(cont);
         };
-        HttpRequest request = Http.post("https://" + servers.first() + api)
+        HttpRequest request = Http.post("https://" + server + api)
                                   .header("Content-Type", "application/json")
                                   .content(content);
+
         request.error(e -> {
-            if (e instanceof HttpStatusException && servers.size >= 2){
+            if (e instanceof HttpStatusException){
                 HttpStatusException hse = (HttpStatusException)e;
-                Log.warn("[EL] Response from @ indicates error (@ @), retrying with @:[]\n@",
-                         servers.remove(0) + api, hse.status.code, hse.status, servers.first(), hse.response.getResultAsString().replace("\n", ""));
-                request.url("https://" + servers.first() + api).submit(successWrap);
-            }
-            else if (e instanceof HttpStatusException){
-                HttpStatusException hse = (HttpStatusException)e;
-                Log.err("[EL] Response from @ indicates error (@ @), disabling translation for this session:[]\n@",
-                        servers.first() + api, hse.status.code, hse.status, hse.response.getResultAsString().replace("\n", ""));
-                ExtraVars.enableTranslation = false;
-            }
-            else{
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw);
-                e.printStackTrace(pw);
-                Log.err("[EL] An unknown error occurred, disabling translation for this session:[]\n" + sw);
+                if (hse.status == HttpStatus.UNKNOWN_STATUS){ // wtf rate limit is not a status code
+                    servers.put(server, true);
+                    Timer.schedule(() -> servers.put(server, false), 60f);
+                    Log.warn("[EL] Rate limit reached with @, retrying...", server + api);
+                }else{
+                    if (servers.size >= 2) Log.warn("[EL] Response from @ indicates error, retrying...\n@", servers.remove(server) + api, hse);
+                    else{
+                        Log.err("[EL] Response from @ indicates error, disabling translation for this session.\n@", server + api, hse);
+                        return;
+                    }
+                }
+                buildSend(api, content, success);
+            }else{
+                Log.err("[EL] An unknown error occurred, disabling translation for this session", e);
                 ExtraVars.enableTranslation = false;
             }
         }).submit(successWrap);
