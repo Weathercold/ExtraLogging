@@ -10,7 +10,6 @@ import arc.util.Log;
 import arc.util.Timer;
 import arc.util.Http.HttpRequest;
 import arc.util.Http.HttpResponse;
-import arc.util.Http.HttpStatus;
 import arc.util.Http.HttpStatusException;
 import arc.util.serialization.JsonWriter.OutputType;
 import logging.ExtraVars;
@@ -111,18 +110,26 @@ public class Translating{
         request.error(e -> {
             if (e instanceof HttpStatusException){
                 HttpStatusException hse = (HttpStatusException)e;
-                if (hse.status == HttpStatus.UNKNOWN_STATUS){ // wtf rate limit is not a status code
-                    servers.put(server, true);
-                    Timer.schedule(() -> servers.put(server, false), 60f);
-                    Log.warn("[EL] Rate limit reached with @, retrying...", server + api);
-                }else{
-                    if (servers.size >= 2) Log.warn("[EL] Response from @ indicates error, retrying...\n@", servers.remove(server) + api, hse);
-                    else{
-                        Log.err("[EL] Response from @ indicates error, disabling translation for this session.\n@", server + api, hse);
-                        return;
-                    }
+                switch (hse.status){
+                    case UNKNOWN_STATUS: // rate limit
+                        Log.info("Rate limit reached with @, retrying...", server + api);
+                        servers.put(server, true);
+                        Timer.schedule(() -> servers.put(server, false), 60f);
+                        buildSend(api, content, success);
+                        break;
+                    case BAD_REQUEST:
+                        Log.warn("Bad request, aborting translation.\n@", content);
+                        break;
+                    default:
+                        if (servers.size >= 2){
+                            Log.warn("HTTP Response indicates error, retrying...\n@", hse);
+                            servers.remove(server);
+                            buildSend(api, content, success);
+                        } else {
+                            Log.err("HTTP Response indicates error, disabling translation for this session.\n@", hse);
+                            ExtraVars.enableTranslation = false;
+                        }
                 }
-                buildSend(api, content, success);
             }else{
                 Log.err("[EL] An unknown error occurred, disabling translation for this session", e);
                 ExtraVars.enableTranslation = false;

@@ -1,6 +1,6 @@
 package logging.util;
 
-import static logging.ExtraVars.coloredJavaConsole;
+import static logging.ExtraVars.*;
 import static logging.util.ColorUtils.*;
 import static mindustry.Vars.headless;
 import static mindustry.Vars.ui;
@@ -41,7 +41,7 @@ public class ExtraLogHandler implements LogHandler{
         System.out.println(rtext);
 
         if(!headless){
-            String ftext = formatCons(tmpl, tags[level.ordinal()], time, text.startsWith("[EL]") ? "[accent]" : "", text);
+            String ftext = formatCons(tmpl, tags[level.ordinal()], time, text.startsWith("[EL]") ? metaColor : "", text);
             if (clientLoaded) ui.scriptfrag.addMessage(ftext);
             else logBuffer.add(ftext);
         }
