@@ -6,14 +6,10 @@ import java.lang.reflect.Field;
 
 import arc.Core;
 import arc.Events;
-import arc.graphics.Color;
 import arc.util.CommandHandler;
 import arc.util.Log;
-import arc.util.Reflect;
 import logging.ui.ExtraChatFragment;
-import logging.util.ColorUtils;
 import logging.util.ExtraLogHandler;
-import logging.util.Translating;
 import mindustry.Vars;
 import mindustry.mod.Mod;
 
@@ -24,7 +20,6 @@ public class ExtraLogging extends Mod{
         Log.level = Log.LogLevel.values()[Core.settings.getInt("extra-loglevel", 0)];
         
         if (enableMetaDebugging) Log.debug("[EL] ExtraLogging()");
-        Log.info("[EL] Current Mindustry language: @", lang); //Not meta
         
         //Register events
         if (enableEventLogging) listeningEvents.each(c -> Events.on(c, e -> {
@@ -42,15 +37,7 @@ public class ExtraLogging extends Mod{
         if (enableMetaDebugging) Log.debug("[EL] init()");
 
         settings.init();
-        if (enableTranslation && !isFoo) Vars.ui.chatfrag = new ExtraChatFragment();
-        else if (enableTranslation) try{
-            Events.on(Class.forName("mindustry.game.EventType$PlayerChatEventClient"), e -> {
-                String message = ColorUtils.parseMsg(Reflect.get(e, "message"));
-                Translating.translate(message, lang, translation -> {
-                    if (!translation.equals(message)) Reflect.invoke(Vars.ui.chatfrag, "addMessage", new Object[]{translation, "Translation", Color.slate}, String.class, String.class, Color.class);
-                });
-            });
-        }catch (ClassNotFoundException e){Log.err(e);}
+        if (enableTranslation) Vars.ui.chatfrag = new ExtraChatFragment();
     }
 
     @Override

@@ -20,13 +20,12 @@ public class ExtraChatFragment extends ChatFragment{
         Core.scene.add(this);
     }
 
-    /** This method is deprecated in Foo, which means it is only called on vanilla */
     @Override
     public void addMessage(String message, String sender){
         super.addMessage(message, sender);
 
-        Translating.translate(message, lang, translation -> {
-            if (!translation.equals(message)) super.addMessage(translation, "[gray]Translation[]");
+        Translating.translate(message, targetLang, translation -> {
+            if (!translation.equals(message)) super.addMessage(translation, "Translation");
         });
     }
 }

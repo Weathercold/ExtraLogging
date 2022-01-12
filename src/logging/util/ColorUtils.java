@@ -148,7 +148,7 @@ public class ColorUtils{
     
     /** Parse chat message. */
     public static String parseMsg(String text){
-        return text.replaceFirst("\\?\\?$", "").replaceFirst("^.*: ", "");
+        return formatColors(text.replaceFirst("\\W\\W$", "").replaceFirst("^.*: ", ""), false);
     }
 
     /** Convert codes to colors. */
