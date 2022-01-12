@@ -6,7 +6,6 @@ import static mindustry.Vars.headless;
 import static mindustry.Vars.ui;
 
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 import arc.Events;
 import arc.struct.Seq;
@@ -23,7 +22,7 @@ public class ExtraLogHandler implements LogHandler{
     public String tmpl = "@ [grey][@][] @@";
     /** Why isn't terminal font monospaced */
     public String[] tags = {"[green][D][]", "[royal][I][] ", "[yellow][W][]", "[scarlet][E][]", "    "};
-    public DateTimeFormatter timef = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+
 
     public Seq<String> logBuffer = new Seq<>();
     public static boolean clientLoaded = false;

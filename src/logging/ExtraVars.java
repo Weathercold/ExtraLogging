@@ -1,5 +1,6 @@
 package logging;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 import arc.Core;
@@ -19,6 +20,7 @@ public class ExtraVars{
     /** Whether to ensure Foo compatibility. */
     public static boolean isFoo;
     
+    public static DateTimeFormatter timef = DateTimeFormatter.ofPattern(Core.settings.getString("extra-timestampformat", "HH:mm:ss.SSS"));
     public static boolean coloredJavaConsole = Core.settings.getBool("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid);
     
     public static boolean enableMetaDebugging = Core.settings.getBool("extra-enablemetadebugging", false);
