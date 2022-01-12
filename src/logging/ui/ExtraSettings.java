@@ -2,6 +2,8 @@ package logging.ui;
 
 import static logging.ExtraVars.*;
 
+import java.time.format.DateTimeFormatter;
+
 import arc.scene.Group;
 import arc.Core;
 import arc.Events;
@@ -44,9 +46,9 @@ public class ExtraSettings{
         //endregion
         //region Advanced
         
-        settings.row();
-        settings.pref(new TextSetting("extra-metacolor", "[accent]", v -> metaColor = v));
+        settings.pref(new TextSetting("extra-timestampformat", "HH:mm:ss.SSS", v -> timef = DateTimeFormatter.ofPattern(v)));
         settings.checkPref("extra-enablemetadebugging", false, v -> enableMetaDebugging = v);
+        settings.pref(new TextSetting("extra-metacolor", "[accent]", v -> metaColor = v));
         settings.sliderPref("extra-eventloglevel", 0, 0, 4, v -> {
             LogLevel level = LogLevel.values()[v];
             eventLogLevel = level;
