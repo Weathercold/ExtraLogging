@@ -1,6 +1,7 @@
 package logging.ui;
 
 import static logging.ExtraVars.*;
+import static mindustry.Vars.*;
 
 import arc.Core;
 import logging.util.Translating;
@@ -24,7 +25,7 @@ public class ExtraChatFragment extends ChatFragment{
     public void addMessage(String message, String sender){
         super.addMessage(message, sender);
 
-        Translating.translate(message, targetLang, translation -> {
+        if (net.active() && sender != player.name) Translating.translate(message, targetLang, translation -> {
             if (!translation.equals(message)) super.addMessage(translation, "Translation");
         });
     }

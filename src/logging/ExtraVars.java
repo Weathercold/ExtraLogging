@@ -22,6 +22,7 @@ public class ExtraVars{
     public static boolean coloredJavaConsole = Core.settings.getBool("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid);
     
     public static boolean enableMetaDebugging = Core.settings.getBool("extra-enablemetadebugging", false);
+    public static String metaColor = Core.settings.getString("extra-metacolor", "[accent]");
     
     public static boolean enableEventLogging = Core.settings.getBool("extra-enableeventlogging", false);
     public static LogLevel eventLogLevel = LogLevel.values()[Core.settings.getInt("extra-metaloglevel", 0)];
@@ -45,7 +46,6 @@ public class ExtraVars{
         try{
             Reflect.get(Version.class, "clientVersion");
             Log.info("[EL] Foo has built-in translation (yes, also by me). Disabling EL's translation.");
-            enableTranslation = false;
             isFoo = true;
         }
         catch (RuntimeException e){
@@ -55,10 +55,8 @@ public class ExtraVars{
                 supportedLangs = langs;
                 targetLang = langs.contains(targetLang) ? targetLang : "en";
             });
-            else{
-                Log.info("[EL] Translation doesn't work on headless servers.");
-                enableTranslation = false;
-            }
+            else Log.info("[EL] Translation doesn't work on headless servers.");
         }
+        enableTranslation = enableTranslation && !isFoo && !Vars.headless;
     }
 }
