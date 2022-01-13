@@ -41,12 +41,15 @@ public class ExtraSettings{
         settings.checkPref("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid, v -> coloredJavaConsole = v);
         settings.checkPref("extra-enableeventlogging", false, v -> enableEventLogging = v);
         if (!isFoo) settings.checkPref("extra-enabletranslation", true, v -> enableTranslation = v);
-        //else basicSettings.add("@extra-logging.fooNotice", Color.gray);
+        else settings.labelWrap("@extra-logging.fooNotice");
         
         //endregion
         //region Advanced
         
-        settings.pref(new TextSetting("extra-timestampformat", "HH:mm:ss.SSS", v -> timef = DateTimeFormatter.ofPattern(v)));
+        settings.pref(new TextSetting("extra-timestampformat", "HH:mm:ss.SSS", v -> {
+            try{timef = DateTimeFormatter.ofPattern(v);}
+            catch (Throwable ignored){}
+        }));
         settings.checkPref("extra-enablemetadebugging", false, v -> enableMetaDebugging = v);
         settings.pref(new TextSetting("extra-metacolor", "[accent]", v -> metaColor = v));
         settings.sliderPref("extra-eventloglevel", 0, 0, 4, v -> {

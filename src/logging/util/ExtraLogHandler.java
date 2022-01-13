@@ -23,7 +23,6 @@ public class ExtraLogHandler implements LogHandler{
     /** Why isn't terminal font monospaced */
     public String[] tags = {"[green][D][]", "[royal][I][] ", "[yellow][W][]", "[scarlet][E][]", "    "};
 
-
     public Seq<String> logBuffer = new Seq<>();
     public static boolean clientLoaded = false;
     

@@ -20,7 +20,7 @@ public class ExtraVars{
     /** Whether to ensure Foo compatibility. */
     public static boolean isFoo;
     
-    public static DateTimeFormatter timef = DateTimeFormatter.ofPattern(Core.settings.getString("extra-timestampformat", "HH:mm:ss.SSS"));
+    public static DateTimeFormatter timef;
     public static boolean coloredJavaConsole = Core.settings.getBool("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid);
     
     public static boolean enableMetaDebugging = Core.settings.getBool("extra-enablemetadebugging", false);
@@ -45,6 +45,9 @@ public class ExtraVars{
     public static ExtraSettings settings = new ExtraSettings();
 
     static{
+        try{timef = DateTimeFormatter.ofPattern(Core.settings.getString("extra-timestampformat", "HH:mm:ss.SSS"));}
+        catch (Throwable e){timef = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");}
+
         try{
             Reflect.get(Version.class, "clientVersion");
             Log.info("[EL] Foo has built-in translation (yes, also by me). Disabling EL's translation.");
