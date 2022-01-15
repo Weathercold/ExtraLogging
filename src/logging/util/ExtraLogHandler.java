@@ -35,7 +35,7 @@ public class ExtraLogHandler implements LogHandler{
     @Override
     public void log(LogLevel level, String text){
         String time = timef.format(LocalTime.now());
-        String rtext = formatColors(stmpl, coloredJavaConsole, stags[level.ordinal()], time, text.startsWith("[EL]") ? "&ly" : "", text);
+        String rtext = formatColors(stmpl, coloredJavaConsole, stags[level.ordinal()], time, text.startsWith("[EL]") ? convertNames(metaColor) : "", text);
         System.out.println(rtext);
 
         if(!headless){
