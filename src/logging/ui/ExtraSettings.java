@@ -12,7 +12,6 @@ import arc.scene.ui.layout.Table;
 import arc.util.Log;
 import arc.util.OS;
 import arc.util.Log.LogLevel;
-import logging.util.TextSetting;
 import mindustry.Vars;
 import mindustry.game.EventType.ResizeEvent;
 import mindustry.ui.Styles;
@@ -40,8 +39,8 @@ public class ExtraSettings{
         });
         settings.checkPref("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid, v -> coloredJavaConsole = v);
         settings.checkPref("extra-enableeventlogging", false, v -> enableEventLogging = v);
-        if (!isFoo) settings.checkPref("extra-enabletranslation", true, v -> enableTranslation = v);
-        else settings.labelWrap("@extra-logging.fooNotice");
+        settings.checkPref("extra-enabletranslation", !isFoo, v -> enableTranslation = v);
+        //settings.labelWrap("@extra-logging.fooNotice");
         
         //endregion
         //region Advanced

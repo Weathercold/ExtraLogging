@@ -76,7 +76,7 @@ public class Translating{
      */
     public static void translate(String text, String source, String target, Cons<String> success){
         if (text == null || source == null || target == null){
-            Log.err(new NullPointerException("Translate arguments cannot be null."));
+            Log.err(new NullPointerException("[EL] Translate arguments cannot be null."));
             return;
         }
         if (source == target){success.get(text); return;}
@@ -92,15 +92,15 @@ public class Translating{
         );
     }
 
-    private static void buildSend(String api, String content, Cons<String> success) {
+    private static void buildSend(String api, String content, Cons<String> success){
         String server = servers.findKey(false, false);
-        if (server == null) {
-            Log.warn("Rate limit reached on all servers. Aborting translation.");
+        if (server == null){
+            Log.warn("[EL] Rate limit reached on all servers. Aborting translation.");
             return;
         }
         ConsT<HttpResponse, Exception> successWrap = res -> {
             String cont = res.getResultAsString();
-            Log.debug("Response from @:\n@", server, cont.replace("\n", ""));
+            Log.debug("[EL] Response from @:[]\n@", server, cont.replace("\n", ""));
             success.get(cont);
         };
         HttpRequest request = Http.post("https://" + server + api)
@@ -112,26 +112,26 @@ public class Translating{
                 HttpStatusException hse = (HttpStatusException)e;
                 switch (hse.status){
                     case UNKNOWN_STATUS: // rate limit
-                        Log.info("Rate limit reached with @, retrying...", server + api);
+                        Log.info("[EL] Rate limit reached with @, retrying...", server + api);
                         servers.put(server, true);
                         Timer.schedule(() -> servers.put(server, false), 60f);
                         buildSend(api, content, success);
                         break;
                     case BAD_REQUEST:
-                        Log.warn("Bad request, aborting translation.\n@", content);
+                        Log.warn("[EL] Bad request, aborting translation.[]\n@", content);
                         break;
                     default:
                         if (servers.size >= 2){
-                            Log.warn("HTTP Response indicates error, retrying...\n@", hse);
+                            Log.warn("[EL] HTTP Response indicates error, retrying...[]\n@", hse);
                             servers.remove(server);
                             buildSend(api, content, success);
-                        } else {
-                            Log.err("HTTP Response indicates error, disabling translation for this session.\n@", hse);
+                        }else{
+                            Log.err("[EL] HTTP Response indicates error, disabling translation for this session[]", hse);
                             ExtraVars.enableTranslation = false;
                         }
                 }
             }else{
-                Log.err("[EL] An unknown error occurred, disabling translation for this session", e);
+                Log.err("[EL] An unknown error occurred, disabling translation for this session[]", e);
                 ExtraVars.enableTranslation = false;
             }
         }).submit(successWrap);

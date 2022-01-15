@@ -50,18 +50,16 @@ public class ExtraVars{
 
         try{
             Reflect.get(Version.class, "clientVersion");
-            Log.info("[EL] Foo has built-in translation (yes, also by me). Disabling EL's translation.");
             isFoo = true;
         }
-        catch (RuntimeException e){
-            isFoo = false;
+        catch (RuntimeException e){isFoo = false;}
         
-            if (!Vars.headless) Translating.languages(langs -> {
-                supportedLangs = langs;
-                targetLang = langs.contains(targetLang) ? targetLang : "en";
-            });
-            else Log.info("[EL] Translation doesn't work on headless servers.");
-        }
-        enableTranslation = enableTranslation && !isFoo && !Vars.headless;
+        if (!Vars.headless) Translating.languages(langs -> {
+            supportedLangs = langs;
+            targetLang = langs.contains(targetLang) ? targetLang : "en";
+        });
+        else Log.info("[EL] Translation doesn't work on headless servers.");
+
+        enableTranslation = Core.settings.getBool("extra-enabletranslation", !isFoo) && !Vars.headless;
     }
 }

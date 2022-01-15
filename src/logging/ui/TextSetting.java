@@ -1,16 +1,16 @@
-package logging.util;
+package logging.ui;
 
-import arc.func.Cons;
-import arc.scene.ui.TextField;
-import arc.scene.ui.layout.Table;
-import mindustry.ui.dialogs.SettingsMenuDialog.SettingsTable;
-import mindustry.ui.dialogs.SettingsMenuDialog.SettingsTable.Setting;
+import arc.func.*;
+import arc.scene.ui.*;
+import arc.scene.ui.layout.*;
+import mindustry.ui.dialogs.SettingsMenuDialog.*;
+import mindustry.ui.dialogs.SettingsMenuDialog.SettingsTable.*;
 
 import static arc.Core.*;
 
 public class TextSetting extends Setting {
-    public String def;
-    public Cons<String> changed;
+    String def;
+    Cons<String> changed;
 
     public TextSetting(String name, String def, Cons<String> changed) {
         super(name);
