@@ -39,8 +39,7 @@ public class ExtraSettings{
         });
         settings.checkPref("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid, v -> coloredJavaConsole = v);
         settings.checkPref("extra-enableeventlogging", false, v -> enableEventLogging = v);
-        settings.checkPref("extra-enabletranslation", !isFoo, v -> enableTranslation = v);
-        //settings.labelWrap("@extra-logging.fooNotice");
+        if (!isFoo) settings.checkPref("extra-enabletranslation", !isFoo, v -> enableTranslation = v);
         
         //endregion
         //region Advanced

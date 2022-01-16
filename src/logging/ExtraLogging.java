@@ -19,7 +19,7 @@ public class ExtraLogging extends Mod{
         Log.logger = new ExtraLogHandler();
         Log.level = Log.LogLevel.values()[Core.settings.getInt("extra-loglevel", 0)];
         
-        if (enableMetaDebugging) Log.debug("[EL] ExtraLogging()");
+        if (enableMetaDebugging) Log.debug("[EL] Creating mod");
         
         //Register events
         if (enableEventLogging) listeningEvents.each(c -> Events.on(c, e -> {
@@ -34,7 +34,7 @@ public class ExtraLogging extends Mod{
 
     @Override
     public void init(){
-        if (enableMetaDebugging) Log.debug("[EL] init()");
+        if (enableMetaDebugging) Log.debug("[EL] Initializing");
 
         settings.init();
         if (enableTranslation) Vars.ui.chatfrag = new ExtraChatFragment();
@@ -42,11 +42,13 @@ public class ExtraLogging extends Mod{
 
     @Override
     public void registerServerCommands(CommandHandler handler){
-        if (enableMetaDebugging) Log.debug("[EL] registerServerCommands()");
+        if (enableMetaDebugging) Log.debug("[EL] Registering commands");
     }
 
     @Override
     public void registerClientCommands(CommandHandler handler){
-        if (enableMetaDebugging) Log.debug("[EL] registerClientCommands()");
+        if (enableMetaDebugging) Log.debug("[EL] Registering commands");
+
+        
     }
 }
