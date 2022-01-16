@@ -39,7 +39,7 @@ public class ExtraVars{
         );
         
     public static String targetLang = Locale.getDefault().getLanguage();
-    public static Seq<String> supportedLangs;
+    public static Seq<String> supportedLangs = new Seq<>();
     public static boolean enableTranslation = Core.settings.getBool("extra-enabletranslation", true);
 
     public static ExtraSettings settings = new ExtraSettings();
