@@ -54,12 +54,14 @@ public class ExtraVars{
         }
         catch (RuntimeException e){isFoo = false;}
         
-        if (!Vars.headless) Translating.languages(langs -> {
+        enableTranslation = Core.settings.getBool("extra-enabletranslation", true) && !isFoo && !Vars.headless;
+
+        Translating.languages(langs -> {
             supportedLangs = langs;
             targetLang = langs.contains(targetLang) ? targetLang : "en";
         });
-        else Log.info("[EL] Translation doesn't work on headless servers.");
-
-        enableTranslation = Core.settings.getBool("extra-enabletranslation", !isFoo) && !Vars.headless;
+        
+        if (isFoo) Log.info("[EL] Translation is disabled because Foo has its own implementation (yes, also by me). Use that instead.");
+        if (Vars.headless) Log.info("[EL] Translation doesn't work on headless servers.");
     }
 }
