@@ -1,21 +1,22 @@
 package logging.ui;
 
-import arc.func.*;
-import arc.scene.ui.*;
-import mindustry.ui.dialogs.SettingsMenuDialog.*;
+import static arc.Core.settings;
 
-import static arc.Core.*;
+import arc.func.Cons;
+import arc.scene.ui.TextArea;
+import mindustry.ui.dialogs.SettingsMenuDialog.SettingsTable;
 
-public class AreaTextSetting extends TextSetting {
+
+public class AreaTextSetting extends TextSetting{
     String def;
     Cons<String> changed;
     
-    public AreaTextSetting(String name, String def, Cons<String> changed) {
+    public AreaTextSetting(String name, String def, Cons<String> changed){
         super(name, def, changed);
     }
 
     @Override
-    public void add(SettingsTable table) {
+    public void add(SettingsTable table){
         TextArea area = new TextArea("");
         area.setPrefRows(5);
 
@@ -26,9 +27,7 @@ public class AreaTextSetting extends TextSetting {
 
         area.changed(() -> {
             settings.put(name, area.getText());
-            if(changed != null){
-                changed.get(area.getText());
-            }
+            if (changed != null) changed.get(area.getText());
         });
 
         addDesc(table.label(() -> title).left().padTop(3f).get());

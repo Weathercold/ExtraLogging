@@ -1,21 +1,18 @@
 package logging.ui;
 
 import static arc.Core.scene;
-import static arc.Core.settings;
 import static logging.ExtraVars.*;
 
-import java.time.format.DateTimeFormatter;
-
-import arc.scene.Group;
 import arc.Events;
+import arc.scene.Group;
 import arc.scene.ui.layout.Table;
-import arc.util.Log;
-import arc.util.OS;
 import arc.util.Log.LogLevel;
+import arc.util.OS;
+import logging.ExtraVars;
 import mindustry.Vars;
 import mindustry.game.EventType.ResizeEvent;
 import mindustry.ui.Styles;
-import mindustry.ui.dialogs.*;
+import mindustry.ui.dialogs.BaseDialog;
 import mindustry.ui.dialogs.SettingsMenuDialog.SettingsTable;
 
 /** Credits to meep for template https://github.com/MEEPofFaith/testing-utilities-java/blob/master/src/testing/content/TUSettings.java */
@@ -61,20 +58,6 @@ public class ExtraSettings{
             settingUi.button("@extra-logging.displayName", Styles.cleart, dialog::show);
         });
 
-        Vars.ui.settings.hidden(this::update);
-    }
-
-    public void update(){
-        Log.level = LogLevel.values()[settings.getInt("extra-loglevel")];
-        coloredTerminal = settings.getBool("extra-coloredterminal");
-        enableEventLogging = settings.getBool("extra-enableeventlogging");
-        enableTranslation = settings.getBool("extra-enabletranslation") && !isFoo && !Vars.headless;
-
-        logf = settings.getString("extra-logformat");
-        try{timef = DateTimeFormatter.ofPattern(settings.getString("extra-timestampformat"));}
-        catch (Throwable ignored){timef = DateTimeFormatter.ISO_LOCAL_TIME;}
-        enableMetaDebugging = settings.getBool("extra-enablemetadebugging");
-        metaColor = settings.getString("extra-metacolor");
-        eventLogLevel = LogLevel.values()[settings.getInt("extra-eventloglevel")];
+        Vars.ui.settings.hidden(ExtraVars::refreshenv);
     }
 }
