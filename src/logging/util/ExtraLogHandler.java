@@ -17,11 +17,8 @@ import mindustry.game.EventType.ClientLoadEvent;
  * @author Weathercold
  */
 public class ExtraLogHandler implements LogHandler{
-    public String stmpl = "@ &lk[@]&fr @@&fr";
-    public String[] stags = {"&lg&fb[D]&fr", "&lb&fb[I]&fr", "&ly&fb[W]&fr", "&lr&fb[E]&fr", "   "};
-    public String tmpl = "@ [grey][@][] @@";
-    /** Why isn't terminal font monospaced */
-    public String[] tags = {"[green][D][]", "[royal][I][] ", "[yellow][W][]", "[scarlet][E][]", "    "};
+    public String[] l = {"D", "I", "W", "E", "/"};
+    public static String[] L = {"[green]", "[royal]", "[yellow]", "[scarlet]", ""};
 
     public Seq<String> logBuffer = new Seq<>();
     public static boolean clientLoaded = false;
@@ -35,13 +32,20 @@ public class ExtraLogHandler implements LogHandler{
     @Override
     public void log(LogLevel level, String text){
         String time = timef.format(LocalTime.now());
-        String rtext = formatColors(stmpl, coloredJavaConsole, stags[level.ordinal()], time, text.startsWith("[EL]") ? convertNames(metaColor) : "", text);
-        System.out.println(rtext);
 
+        text = logf.replaceAll("\\$t", time)
+                   .replaceAll("\\$L", L[level.ordinal()])
+                   .replaceAll("\\$l", l[level.ordinal()])
+                   .replaceAll("\\$M", text.startsWith("[EL]") ? metaColor : "")
+                   .replaceAll("\\$m", text);
+
+        //Java console
+        System.out.println(formatColors(text, coloredTerminal));
+
+        //In-game console
         if(!headless){
-            String ftext = formatCons(tmpl, tags[level.ordinal()], time, text.startsWith("[EL]") ? metaColor : "", text);
-            if (clientLoaded) ui.scriptfrag.addMessage(ftext);
-            else logBuffer.add(ftext);
+            if (clientLoaded) ui.scriptfrag.addMessage(formatCons(text));
+            else logBuffer.add(formatCons(text));
         }
     }
 }

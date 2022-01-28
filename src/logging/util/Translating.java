@@ -7,6 +7,7 @@ import arc.struct.Seq;
 import arc.struct.StringMap;
 import arc.util.Http;
 import arc.util.Log;
+import arc.util.Nullable;
 import arc.util.Timer;
 import arc.util.Http.HttpRequest;
 import arc.util.Http.HttpResponse;
@@ -43,7 +44,7 @@ public class Translating{
 
         buildSend(
             "/detect",
-            "{\"q\":\"" + text + "\"}",
+            StringMap.of("q", text),
             res -> success.get(JsonIO.json.fromJson(StringMap[].class, res)[0].get("language"))
         );
     }
@@ -54,7 +55,7 @@ public class Translating{
     public static void languages(Cons<Seq<String>> success){
         buildSend(
             "/languages",
-            "", //no body
+            null, //no body
             res -> {
                 StringMap[] langs = JsonIO.json.fromJson(StringMap[].class, res);
                 Seq<String> codes = new Seq<>(langs.length);
@@ -83,16 +84,16 @@ public class Translating{
 
         buildSend(
             "/translate",
-            JsonIO.json.toJson(StringMap.of(
+            StringMap.of(
                 "q", text,
                 "source", source,
                 "target", target
-            ), StringMap.class, String.class),
+            ),
             res -> success.get(JsonIO.json.fromJson(StringMap.class, res).get("translatedText"))
         );
     }
 
-    private static void buildSend(String api, String content, Cons<String> success){
+    private static void buildSend(String api, @Nullable StringMap body, Cons<String> success){
         String server = servers.findKey(false, false);
         if (server == null){
             Log.warn("[EL] Rate limit reached on all servers. Aborting translation.");
@@ -105,7 +106,7 @@ public class Translating{
         };
         HttpRequest request = Http.post("https://" + server + api)
                                   .header("Content-Type", "application/json")
-                                  .content(content);
+                                  .content(JsonIO.json.toJson(body, StringMap.class, String.class));
 
         request.error(e -> {
             if (e instanceof HttpStatusException){
@@ -115,16 +116,16 @@ public class Translating{
                         Log.info("[EL] Rate limit reached with @, retrying...", server + api);
                         servers.put(server, true);
                         Timer.schedule(() -> servers.put(server, false), 60f);
-                        buildSend(api, content, success);
+                        buildSend(api, body, success);
                         break;
                     case BAD_REQUEST:
-                        Log.warn("[EL] Bad request, aborting translation.[]\n@", content);
+                        Log.warn("[EL] Bad request, aborting translation.[]\n@", body);
                         break;
                     default:
                         if (servers.size >= 2){
                             Log.warn("[EL] HTTP Response indicates error, retrying...[]\n@", hse);
                             servers.remove(server);
-                            buildSend(api, content, success);
+                            buildSend(api, body, success);
                         }else{
                             Log.err("[EL] HTTP Response indicates error, disabling translation for this session[]", hse);
                             ExtraVars.enableTranslation = false;

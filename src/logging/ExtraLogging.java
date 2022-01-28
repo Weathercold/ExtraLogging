@@ -44,7 +44,7 @@ public class ExtraLogging extends Mod{
         if (enableMetaDebugging) Log.debug("[EL] Initializing");
 
         settings.init();
-        if (enableTranslation) Vars.ui.chatfrag = new ExtraChatFragment();
+        if (!isFoo) Vars.ui.chatfrag = new ExtraChatFragment();
     }
 
     @Override
