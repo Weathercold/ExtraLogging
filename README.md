@@ -6,8 +6,8 @@ I initially made this mod to better understand the order in which the events are
 ## Features
 - Enables the in-game console.
 - Adds customisable log level<sup>[1]</sup>.
-- **Adds timestamp for console messages**<sup>[1]</sup>.
-- **Optionally reenables/disables colored Java console**<sup>[2]</sup>.
+- **Fully customizable log format /w timestamp support**<sup>[1]</sup>.
+- **Optionally reenables/disables colored terminal**<sup>[2]</sup>.
 - Fixes log display order (vanilla issue).
 - **Translates chat messages to your locale**.
 - Optionally prints important event triggers to the console.
