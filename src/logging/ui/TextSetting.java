@@ -1,25 +1,25 @@
 package logging.ui;
 
-import arc.func.*;
-import arc.scene.ui.*;
-import arc.scene.ui.layout.*;
-import mindustry.ui.dialogs.SettingsMenuDialog.*;
-import mindustry.ui.dialogs.SettingsMenuDialog.SettingsTable.*;
+import static arc.Core.settings;
 
-import static arc.Core.*;
+import arc.func.Cons;
+import arc.scene.ui.TextField;
+import arc.scene.ui.layout.Table;
+import mindustry.ui.dialogs.SettingsMenuDialog.SettingsTable;
+import mindustry.ui.dialogs.SettingsMenuDialog.SettingsTable.Setting;
 
-public class TextSetting extends Setting {
+public class TextSetting extends Setting{
     String def;
     Cons<String> changed;
 
-    public TextSetting(String name, String def, Cons<String> changed) {
+    public TextSetting(String name, String def, Cons<String> changed){
         super(name);
         this.def = def;
         this.changed = changed;
     }
 
     @Override
-    public void add(SettingsTable table) {
+    public void add(SettingsTable table){
         TextField field = new TextField();
 
         field.update(() -> field.setText(settings.getString(name, def)));

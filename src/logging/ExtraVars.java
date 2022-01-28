@@ -3,10 +3,12 @@ package logging;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+import arc.Core;
 import arc.struct.Seq;
 import arc.util.Log;
-import arc.util.Reflect;
 import arc.util.Log.LogLevel;
+import arc.util.OS;
+import arc.util.Reflect;
 import logging.ui.ExtraSettings;
 import logging.util.Translating;
 import mindustry.Vars;
@@ -43,8 +45,10 @@ public class ExtraVars{
 
     public static ExtraSettings settings = new ExtraSettings();
 
-    static{
-        settings.update();
+    static{initenv();}
+
+    public static void initenv(){
+        refreshenv();
 
         try{
             Reflect.get(Version.class, "clientVersion");
@@ -59,5 +63,19 @@ public class ExtraVars{
         
         if (isFoo) Log.info("[EL] Translation is disabled because Foo has its own implementation (yes, also by me). Use that instead.");
         if (Vars.headless) Log.info("[EL] Translation doesn't work on headless servers.");
+    }
+
+    public static void refreshenv(){
+        Log.level = LogLevel.values()[Core.settings.getInt("extra-loglevel")];
+        coloredTerminal = Core.settings.getBool("extra-coloredterminal", !OS.isWindows && !OS.isAndroid);
+        enableEventLogging = Core.settings.getBool("extra-enableeventlogging", false);
+        enableTranslation = Core.settings.getBool("extra-enabletranslation", !isFoo) && !isFoo && !Vars.headless;
+
+        logf = Core.settings.getString("extra-logformat", "[gray][$t][] &fb$L[$l][] $M$m[]");
+        try{timef = DateTimeFormatter.ofPattern(Core.settings.getString("extra-timestampformat", "HH:mm:ss.SSS"));}
+        catch (Throwable ignored){timef = DateTimeFormatter.ISO_LOCAL_TIME;}
+        enableMetaDebugging = Core.settings.getBool("extra-enablemetadebugging", false);
+        metaColor = Core.settings.getString("extra-metacolor", "[accent]");
+        eventLogLevel = LogLevel.values()[Core.settings.getInt("extra-eventloglevel", 0)];
     }
 }
