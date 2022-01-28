@@ -23,7 +23,7 @@ public class ExtraLogHandler implements LogHandler{
     public Seq<String> logBuffer = new Seq<>();
     public static boolean clientLoaded = false;
     
-    static{Events.on(ClientLoadEvent.class, e -> {clientLoaded = true;});}
+    static{Events.on(ClientLoadEvent.class, e -> clientLoaded = true);}
 
     public ExtraLogHandler(){
         Events.on(ClientLoadEvent.class, e -> logBuffer.each(ui.scriptfrag::addMessage));
