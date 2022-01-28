@@ -25,7 +25,7 @@ public class ExtraChatFragment extends ChatFragment{
     public void addMessage(String message, String sender){
         super.addMessage(message, sender);
 
-        if (net.active() && sender != player.name) Translating.translate(message, targetLang, translation -> {
+        if (enableTranslation && sender != player.name) Translating.translate(message, targetLang, translation -> {
             if (!translation.equals(message)) super.addMessage(translation, "Translation");
         });
     }

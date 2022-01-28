@@ -3,10 +3,8 @@ package logging;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-import arc.Core;
 import arc.struct.Seq;
 import arc.util.Log;
-import arc.util.OS;
 import arc.util.Reflect;
 import arc.util.Log.LogLevel;
 import logging.ui.ExtraSettings;
@@ -20,14 +18,15 @@ public class ExtraVars{
     /** Whether to ensure Foo compatibility. */
     public static boolean isFoo;
     
+    public static String logf;
     public static DateTimeFormatter timef;
-    public static boolean coloredJavaConsole = Core.settings.getBool("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid);
+    public static boolean coloredTerminal;
     
-    public static boolean enableMetaDebugging = Core.settings.getBool("extra-enablemetadebugging", false);
-    public static String metaColor = Core.settings.getString("extra-metacolor", "[accent]");
+    public static boolean enableMetaDebugging;
+    public static String metaColor;
     
-    public static boolean enableEventLogging = Core.settings.getBool("extra-enableeventlogging", false);
-    public static LogLevel eventLogLevel = LogLevel.values()[Core.settings.getInt("extra-metaloglevel", 0)];
+    public static boolean enableEventLogging;
+    public static LogLevel eventLogLevel;
     public static Seq<Class<? extends Object>> listeningEvents = Seq.with(
         FileTreeInitEvent.class,
         ContentInitEvent.class,
@@ -40,21 +39,18 @@ public class ExtraVars{
         
     public static String targetLang = Locale.getDefault().getLanguage();
     public static Seq<String> supportedLangs = new Seq<>();
-    public static boolean enableTranslation = Core.settings.getBool("extra-enabletranslation", true);
+    public static boolean enableTranslation;
 
     public static ExtraSettings settings = new ExtraSettings();
 
     static{
-        try{timef = DateTimeFormatter.ofPattern(Core.settings.getString("extra-timestampformat", "HH:mm:ss.SSS"));}
-        catch (Throwable e){timef = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");}
+        settings.update();
 
         try{
             Reflect.get(Version.class, "clientVersion");
             isFoo = true;
         }
         catch (RuntimeException e){isFoo = false;}
-        
-        enableTranslation = Core.settings.getBool("extra-enabletranslation", true) && !isFoo && !Vars.headless;
 
         Translating.languages(langs -> {
             supportedLangs = langs;

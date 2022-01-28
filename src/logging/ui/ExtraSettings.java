@@ -1,13 +1,13 @@
 package logging.ui;
 
+import static arc.Core.scene;
+import static arc.Core.settings;
 import static logging.ExtraVars.*;
 
 import java.time.format.DateTimeFormatter;
 
 import arc.scene.Group;
-import arc.Core;
 import arc.Events;
-import arc.scene.ui.TextButton;
 import arc.scene.ui.layout.Table;
 import arc.util.Log;
 import arc.util.OS;
@@ -21,8 +21,7 @@ import mindustry.ui.dialogs.SettingsMenuDialog.SettingsTable;
 /** Credits to meep for template https://github.com/MEEPofFaith/testing-utilities-java/blob/master/src/testing/content/TUSettings.java */
 public class ExtraSettings{
     public BaseDialog dialog;
-    public SettingsTable settings;
-    public TextButton advButton;
+    public SettingsTable table;
 
     public void init(){
         dialog = new BaseDialog("@extra-logging.displayName");
@@ -31,36 +30,26 @@ public class ExtraSettings{
         
         //region Basic
         
-        dialog.cont.add(settings = new SettingsTable());
-        settings.sliderPref("extra-loglevel", 0, 0, 4, v -> {
-            LogLevel level = LogLevel.values()[v];
-            Log.level = level;
-            return level.name();
-        });
-        settings.checkPref("extra-coloredjavaconsole", !OS.isWindows && !OS.isAndroid, v -> coloredJavaConsole = v);
-        settings.checkPref("extra-enableeventlogging", false, v -> enableEventLogging = v);
-        if (!isFoo) settings.checkPref("extra-enabletranslation", !isFoo, v -> enableTranslation = v);
+        dialog.cont.add(table = new SettingsTable());
+        table.sliderPref("extra-loglevel", 0, 0, 4, v -> LogLevel.values()[v].name());
+        table.checkPref("extra-coloredterminal", !OS.isWindows && !OS.isAndroid);
+        table.checkPref("extra-enableeventlogging", false);
+        if (!isFoo) table.checkPref("extra-enabletranslation", !isFoo);
         
         //endregion
         //region Advanced
         
-        settings.pref(new TextSetting("extra-timestampformat", "HH:mm:ss.SSS", v -> {
-            try{timef = DateTimeFormatter.ofPattern(v);}
-            catch (Throwable ignored){}
-        }));
-        settings.checkPref("extra-enablemetadebugging", false, v -> enableMetaDebugging = v);
-        settings.pref(new TextSetting("extra-metacolor", "[accent]", v -> metaColor = v));
-        settings.sliderPref("extra-eventloglevel", 0, 0, 4, v -> {
-            LogLevel level = LogLevel.values()[v];
-            eventLogLevel = level;
-            return level.name();
-        });
+        table.pref(new AreaTextSetting("extra-logformat", "[gray][$t][] &fb$L[$l][] $M$m[]", null));
+        table.pref(new TextSetting("extra-timestampformat", "HH:mm:ss.SSS", null));
+        table.checkPref("extra-enablemetadebugging", false);
+        table.pref(new TextSetting("extra-metacolor", "[accent]", null));
+        table.sliderPref("extra-eventloglevel", 0, 0, 4, v -> LogLevel.values()[v].name());
         
         //endregion
         //region Listeners
 
         Events.on(ResizeEvent.class, e -> {
-            if(dialog.isShown() && Core.scene.getDialog() == dialog){
+            if(dialog.isShown() && scene.getDialog() == dialog){
                 dialog.updateScrollFocus();
             }
         });
@@ -71,5 +60,21 @@ public class ExtraSettings{
             settingUi.row();
             settingUi.button("@extra-logging.displayName", Styles.cleart, dialog::show);
         });
+
+        Vars.ui.settings.hidden(this::update);
+    }
+
+    public void update(){
+        Log.level = LogLevel.values()[settings.getInt("extra-loglevel")];
+        coloredTerminal = settings.getBool("extra-coloredterminal");
+        enableEventLogging = settings.getBool("extra-enableeventlogging");
+        enableTranslation = settings.getBool("extra-enabletranslation") && !isFoo && !Vars.headless;
+
+        logf = settings.getString("extra-logformat");
+        try{timef = DateTimeFormatter.ofPattern(settings.getString("extra-timestampformat"));}
+        catch (Throwable ignored){timef = DateTimeFormatter.ISO_LOCAL_TIME;}
+        enableMetaDebugging = settings.getBool("extra-enablemetadebugging");
+        metaColor = settings.getString("extra-metacolor");
+        eventLogLevel = LogLevel.values()[settings.getInt("extra-eventloglevel")];
     }
 }
