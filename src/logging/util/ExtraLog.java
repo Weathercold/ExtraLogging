@@ -1,5 +1,8 @@
 package logging.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import arc.Core;
 import arc.util.Log;
 import arc.util.Log.LogLevel;
@@ -10,7 +13,7 @@ import arc.util.Log.LogLevel;
 public class ExtraLog{
     public static void log(LogLevel level, String text, Object... args){
         if (text.startsWith("@")){
-            Log.Log(level, "[EL] " + Core.bundle.format(text, args));
+            Log.log(level, "[EL] " + Core.bundle.format(text, args));
         }else{
             Log.log(level, "[EL] " + text, args);
         }
@@ -30,5 +33,12 @@ public class ExtraLog{
 
     public static void err(String text){
         log(LogLevel.err, text, args);
+    }
+
+    public static void err(String text, Throwable th){
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        th.printStackTrace(pw);
+        err(text + "\n" + sw);
     }
 }
