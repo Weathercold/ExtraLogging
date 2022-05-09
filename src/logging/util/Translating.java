@@ -1,61 +1,44 @@
 package logging.util;
 
-import arc.func.Cons;
-import arc.func.ConsT;
-import arc.struct.ObjectMap;
-import arc.struct.Seq;
-import arc.struct.StringMap;
-import arc.util.Http;
-import arc.util.Log;
-import arc.util.Nullable;
-import arc.util.Timer;
-import arc.util.Http.HttpRequest;
-import arc.util.Http.HttpResponse;
-import arc.util.Http.HttpStatusException;
-import arc.util.serialization.JsonWriter.OutputType;
-import logging.ExtraVars;
-import mindustry.io.JsonIO;
+import static logging.ExtraVars.*;
+import static logging.util.ExtraLog.*;
 
-/** Partial wrapper for the <a href="https://libretranslate.com">LibreTranslate API</a><p>
- * Technically this falls into the <a href="https://github.com/LibreTranslate/LibreTranslate#can-i-use-your-api-server-at-libretranslatecom-for-my-application-in-production">"infrequent use"</a> category (I hope so)<p>
+import arc.func.*;
+import arc.struct.*;
+import arc.util.*;
+import arc.util.Http.*;
+import arc.util.serialization.JsonWriter.*;
+import mindustry.io.*;
+
+/** Partial wrapper for the <a href=https://libretranslate.com>LibreTranslate API</a>
  * <!-- Is this how I'm supposed to write async --->
  * @author Weathercold
  */
 public class Translating{
+    /** List of mirrors can be found <a href=https://github.com/LibreTranslate/LibreTranslate#mirrors>here</a>.
+     * If you see a mirror not working, please make a pr.
+     */
     public static volatile ObjectMap<String, Boolean> servers = ObjectMap.of(
         //"libretranslate.com", false, requires API key :(
-        "translate.api.skitzen.com", false,
-        "translate.mentality.rip", false, //sus link
         "translate.argosopentech.com", false,
-        "trans.zillyhuhn.com", false
+        "translate.api.skitzen.com", false,
+        "libretranslate.de", false,
+        "libretranslate.pussthecat.org", false,
+        "translate.fortytwo-it.com", false
     );
 
-    //Might break certain mods idk
-    static{JsonIO.json.setOutputType(OutputType.json);}
-
-    /** Get the language of the specified text, then run success if no errors occurred.
-     * @param success The callback to run if no errors occurred.
-    */
-    public static void detect(String text, Cons<String> success){
-        if (text == null){
-            Log.err(new NullPointerException("Detect text cannot be null."));
-            return;
-        }
-
-        buildSend(
-            "/detect",
-            StringMap.of("q", text),
-            res -> success.get(JsonIO.json.fromJson(StringMap[].class, res)[0].get("language"))
-        );
+    // Might break certain mods idk
+    static{
+        if (enableTranslation) JsonIO.json.setOutputType(OutputType.json);
     }
 
-    /** Retrieve an array of supported languages, then run success if no errors occurred.
+
+    /** Retrieve an array of supported languages.
      * @param success The callback to run if no errors occurred.
      */
     public static void languages(Cons<Seq<String>> success){
-        buildSend(
+        fetch(
             "/languages",
-            null, //no body
             res -> {
                 StringMap[] langs = JsonIO.json.fromJson(StringMap[].class, res);
                 Seq<String> codes = new Seq<>(langs.length);
@@ -65,76 +48,109 @@ public class Translating{
         );
     }
 
-    /** detect() + translate() */
-    public static void translate(String text, String target, Cons<String> success){
-        detect(text, source -> translate(text, source, target, success));
+    /** Get the language of the specified text.
+     * @param success The callback to run if no errors occurred.
+     */
+    public static void detect(String text, Cons<String> success){
+        if (text == null){
+            Log.err(new NullPointerException("Detect text cannot be null."));
+            return;
+        }
+
+        fetch(
+            "/detect",
+            StringMap.of("q", text),
+            res -> success.get(JsonIO.json.fromJson(StringMap[].class, res)[0].get("language"))
+        );
     }
 
-    /** Translate the specified text from the source language to the target language, then run success if no errors occurred.
-     * @param source Language code of the source language.
-     * @param target Language code of the target language.
+    public static void translate(String text, Cons<String> success){
+        translate(text, "auto", "en", success);
+    }
+
+    public static void translate(String text, String target, Cons<String> success){
+        translate(text, "auto", target, success);
+    }
+
+    /** Translate the specified text from the source language to the target language.
+     * @param source Source language code.
+     * @param target target language code.
      * @param success The callback to run if no errors occurred.
      */
     public static void translate(String text, String source, String target, Cons<String> success){
         if (text == null || source == null || target == null){
-            Log.err(new NullPointerException("[EL] Translate arguments cannot be null."));
+            Log.err(new NullPointerException("Translate arguments cannot be null."));
             return;
         }
         if (source == target){success.get(text); return;}
 
-        buildSend(
+        fetch(
             "/translate",
             StringMap.of(
                 "q", text,
                 "source", source,
                 "target", target
             ),
-            res -> success.get(JsonIO.json.fromJson(StringMap.class, res).get("translatedText"))
+            res -> {
+                String translation = JsonIO.json.fromJson(StringMap.class, res).get("translatedText");
+                if (translation.length() <= 256)
+                    success.get(translation);
+                else
+                    warn("Translation is too long (@chars)", translation.length());
+            }
         );
     }
 
-    private static void buildSend(String api, @Nullable StringMap body, Cons<String> success){
+    private static void fetch(String api, Cons<String> success){
+        fetch(api, HttpMethod.GET, null, success);
+    }
+    private static void fetch(String api, @Nullable StringMap body, Cons<String> success){
+        fetch(api, HttpMethod.POST, body, success);
+    }
+
+    private static void fetch(String api, HttpMethod method, @Nullable StringMap body, Cons<String> success){
         String server = servers.findKey(false, false);
         if (server == null){
-            Log.warn("[EL] Rate limit reached on all servers. Aborting translation.");
+            warn("Rate limit reached on all servers. Aborting translation.");
             return;
         }
-        ConsT<HttpResponse, Exception> successWrap = res -> {
-            String cont = res.getResultAsString();
-            Log.debug("[EL] Response from @:[]\n@", server, cont.replace("\n", ""));
-            success.get(cont);
-        };
-        HttpRequest request = Http.post("https://" + server + api)
-                                  .header("Content-Type", "application/json")
-                                  .content(JsonIO.json.toJson(body, StringMap.class, String.class));
 
-        request.error(e -> {
-            if (e instanceof HttpStatusException){
-                HttpStatusException hse = (HttpStatusException)e;
-                switch (hse.status){
-                    case UNKNOWN_STATUS: // rate limit
-                        Log.info("[EL] Rate limit reached with @, retrying...", server + api);
-                        servers.put(server, true);
-                        Timer.schedule(() -> servers.put(server, false), 60f);
-                        buildSend(api, body, success);
-                        break;
-                    case BAD_REQUEST:
-                        Log.warn("[EL] Bad request, aborting translation.[]\n@", body);
-                        break;
-                    default:
-                        if (servers.size >= 2){
-                            Log.warn("[EL] HTTP Response indicates error, retrying...[]\n@", hse);
-                            servers.remove(server);
-                            buildSend(api, body, success);
-                        }else{
-                            Log.err("[EL] HTTP Response indicates error, disabling translation for this session[]", hse);
-                            ExtraVars.enableTranslation = false;
+        Http.post("https://" + server + api)
+            .method(method)
+            .header("Content-Type", "application/json")
+            .content(JsonIO.json.toJson(body, StringMap.class, String.class))
+            .error(e -> {
+                if (e instanceof HttpStatusException){
+                    HttpStatusException hse = (HttpStatusException)e;
+                    switch (hse.status){
+                        case BAD_REQUEST -> warn("Bad request, aborting translation: @", body);
+                        case INTERNAL_SERVER_ERROR -> warn("Server-side error, aborting translation: @", body);
+                        case UNKNOWN_STATUS -> { // most likely rate limit
+                            Log.info("Rate limit reached with @, retrying...", server + api);
+                            servers.put(server, true);
+                            Timer.schedule(() -> servers.put(server, false), 60f);
+                            fetch(api, body, success);
                         }
+                        default -> {
+                            if (servers.size >= 2){
+                                warn("HTTP Response indicates error, retrying: @", hse);
+                                servers.remove(server);
+                                fetch(api, body, success);
+                            }else{
+                                err("HTTP Response indicates error, disabling translation for this session", hse);
+                                enableTranslation = false;
+                            }
+                        }
+                    }
+                }else{
+                    err("An unknown error occurred, disabling translation for this session", e);
+                    enableTranslation = false;
                 }
-            }else{
-                Log.err("[EL] An unknown error occurred, disabling translation for this session[]", e);
-                ExtraVars.enableTranslation = false;
-            }
-        }).submit(successWrap);
+            })
+            .submit(response -> {
+                String result = response.getResultAsString();
+                debug("Response from @:\n@", server, result.replace("\n", ""));
+                success.get(result);
+            });
     }
 }
