@@ -31,7 +31,7 @@ public class ExtraLog{
         log(LogLevel.warn, text, args);
     }
 
-    public static void err(String text){
+    public static void err(String text, Object... args){
         log(LogLevel.err, text, args);
     }
 
