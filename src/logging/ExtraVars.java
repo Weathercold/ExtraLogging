@@ -1,5 +1,7 @@
 package logging;
 
+import static logging.util.ExtraLog.*;
+
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -48,28 +50,28 @@ public class ExtraVars{
     static{initenv();}
 
     public static void initenv(){
-        refreshenv();
-
         try{
             Reflect.get(Version.class, "clientVersion");
             isFoo = true;
         }
         catch (RuntimeException e){isFoo = false;}
-
+                
         Translating.languages(langs -> {
             supportedLangs = langs;
             targetLang = langs.contains(targetLang) ? targetLang : "en";
         });
         
-        if (isFoo) Log.info("[EL] Translation is disabled because Foo has its own implementation (yes, also by me). Use that instead.");
-        if (Vars.headless) Log.info("[EL] Translation doesn't work on headless servers.");
+        if (isFoo) info("@extra-logging.footranslation");
+        if (Vars.headless) info("@extra-logging.headlesstranslation");
+        
+        refreshenv();
     }
 
     public static void refreshenv(){
         Log.level = LogLevel.values()[Core.settings.getInt("extra-loglevel")];
         coloredTerminal = Core.settings.getBool("extra-coloredterminal", !OS.isWindows && !OS.isAndroid);
         enableEventLogging = Core.settings.getBool("extra-enableeventlogging", false);
-        enableTranslation = Core.settings.getBool("extra-enabletranslation", !isFoo) && !isFoo && !Vars.headless;
+        enableTranslation = Core.settings.getBool("extra-enabletranslation", !isFoo && !Vars.headless) && !isFoo && !Vars.headless;
 
         logf = Core.settings.getString("extra-logformat", "[gray][$t][] &fb$L[$l][] $M$m[]");
         try{timef = DateTimeFormatter.ofPattern(Core.settings.getString("extra-timestampformat", "HH:mm:ss.SSS"));}
