@@ -66,11 +66,12 @@ public class ExtraLogging extends Mod{
                     translate(cont, targetLang, translation -> Vars.ui.chatfrag.addMessage("", "Translation: " + translation));
                 }
                 case 1 -> translate(args[0], translation -> Call.sendChatMessage(translation + " [gray](translated)"));
-                case 2 ->
+                case 2 -> {
                     if (supportedLangs.contains(args[0]))
                         translate(args[1], args[0], translation -> Call.sendChatMessage(translation + " [gray](translated)"));
                     else
                         translate(args[0] + args[1], translation -> Call.sendChatMessage(translation + " [gray](translated)"));
+                }
             }
         });
     }
