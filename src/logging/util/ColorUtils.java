@@ -1,9 +1,8 @@
 package logging.util;
 
-import arc.struct.Seq;
-import arc.struct.StringMap;
-import arc.struct.ObjectMap.Entry;
-import arc.util.Strings;
+import arc.struct.*;
+import arc.struct.ObjectMap.*;
+import arc.util.*;
 
 /** {@link arc.util.ColorCodes} sucks, use this one
  * @author Weathercold

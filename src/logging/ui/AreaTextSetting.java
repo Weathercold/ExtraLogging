@@ -1,10 +1,10 @@
 package logging.ui;
 
-import static arc.Core.settings;
+import static arc.Core.*;
 
-import arc.func.Cons;
-import arc.scene.ui.TextArea;
-import mindustry.ui.dialogs.SettingsMenuDialog.SettingsTable;
+import arc.func.*;
+import arc.scene.ui.*;
+import mindustry.ui.dialogs.SettingsMenuDialog.*;
 
 
 public class AreaTextSetting extends TextSetting{
