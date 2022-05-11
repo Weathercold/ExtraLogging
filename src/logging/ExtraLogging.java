@@ -5,20 +5,16 @@ import static logging.util.ColorUtils.*;
 import static logging.util.ExtraLog.*;
 import static logging.util.Translating.*;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.*;
 
-import arc.Core;
-import arc.Events;
-import arc.struct.Seq;
-import arc.util.CommandHandler;
-import arc.util.Log;
-import arc.util.Reflect;
-import logging.ui.ExtraChatFragment;
-import logging.util.ExtraLogHandler;
+import arc.*;
+import arc.struct.*;
+import arc.util.*;
+import logging.ui.*;
+import logging.util.*;
 import mindustry.Vars;
-import mindustry.gen.Call;
-import mindustry.gen.Player;
-import mindustry.mod.Mod;
+import mindustry.gen.*;
+import mindustry.mod.*;
 
 @SuppressWarnings("unchecked")
 public class ExtraLogging extends Mod{
@@ -63,7 +59,7 @@ public class ExtraLogging extends Mod{
                     Object message = ((Seq<Object>)Reflect.get(Vars.ui.chatfrag, "messages")).firstOpt();
                     if (message == null) return;
                     String cont = parseMsg(Reflect.get(message, "message"));
-                    translate(cont, targetLang, translation -> Vars.ui.chatfrag.addMessage("", "Translation: " + translation));
+                    translate(cont, targetLang, translation -> Vars.ui.chatfrag.addMessage("Translation: " + translation));
                 }
                 case 1 -> translate(args[0], translation -> Call.sendChatMessage(translation + " [gray](translated)"));
                 case 2 -> {

@@ -1,12 +1,12 @@
 package logging.ui;
 
-import static arc.Core.settings;
+import static arc.Core.*;
 
-import arc.func.Cons;
-import arc.scene.ui.TextField;
-import arc.scene.ui.layout.Table;
-import mindustry.ui.dialogs.SettingsMenuDialog.SettingsTable;
-import mindustry.ui.dialogs.SettingsMenuDialog.SettingsTable.Setting;
+import arc.func.*;
+import arc.scene.ui.*;
+import arc.scene.ui.layout.*;
+import mindustry.ui.dialogs.SettingsMenuDialog.*;
+import mindustry.ui.dialogs.SettingsMenuDialog.SettingsTable.*;
 
 public class TextSetting extends Setting{
     String def;

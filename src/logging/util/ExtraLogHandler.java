@@ -2,16 +2,14 @@ package logging.util;
 
 import static logging.ExtraVars.*;
 import static logging.util.ColorUtils.*;
-import static mindustry.Vars.headless;
-import static mindustry.Vars.ui;
+import static mindustry.Vars.*;
 
-import java.time.LocalTime;
+import java.time.*;
 
-import arc.Events;
-import arc.struct.Seq;
-import arc.util.Log.LogHandler;
-import arc.util.Log.LogLevel;
-import mindustry.game.EventType.ClientLoadEvent;
+import arc.*;
+import arc.struct.*;
+import arc.util.Log.*;
+import mindustry.game.EventType.*;
 
 /** I know you can just use a lambda for logger but this is way clearer
  * @author Weathercold

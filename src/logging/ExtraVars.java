@@ -2,19 +2,17 @@ package logging;
 
 import static logging.util.ExtraLog.*;
 
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
+import java.time.format.*;
+import java.util.*;
 
-import arc.Core;
-import arc.struct.Seq;
-import arc.util.Log;
-import arc.util.Log.LogLevel;
-import arc.util.OS;
-import arc.util.Reflect;
-import logging.ui.ExtraSettings;
-import logging.util.Translating;
-import mindustry.Vars;
-import mindustry.core.Version;
+import arc.*;
+import arc.struct.*;
+import arc.util.*;
+import arc.util.Log.*;
+import logging.ui.*;
+import logging.util.*;
+import mindustry.*;
+import mindustry.core.*;
 import mindustry.game.EventType.*;
 
 @SuppressWarnings("unchecked")

@@ -1,19 +1,19 @@
 package logging.ui;
 
-import static arc.Core.scene;
+import static arc.Core.*;
 import static logging.ExtraVars.*;
 
-import arc.Events;
-import arc.scene.Group;
-import arc.scene.ui.layout.Table;
-import arc.util.Log.LogLevel;
-import arc.util.OS;
-import logging.ExtraVars;
-import mindustry.Vars;
-import mindustry.game.EventType.ResizeEvent;
-import mindustry.ui.Styles;
-import mindustry.ui.dialogs.BaseDialog;
-import mindustry.ui.dialogs.SettingsMenuDialog.SettingsTable;
+import arc.*;
+import arc.scene.*;
+import arc.scene.ui.layout.*;
+import arc.util.Log.*;
+import arc.util.*;
+import logging.*;
+import mindustry.*;
+import mindustry.game.EventType.*;
+import mindustry.ui.*;
+import mindustry.ui.dialogs.*;
+import mindustry.ui.dialogs.SettingsMenuDialog.*;
 
 /** Credits to meep for template https://github.com/MEEPofFaith/testing-utilities-java/blob/master/src/testing/content/TUSettings.java */
 public class ExtraSettings{

@@ -1,11 +1,10 @@
 package logging.ui;
 
 import static logging.ExtraVars.*;
-import static mindustry.Vars.*;
 
-import arc.Core;
-import logging.util.Translating;
-import mindustry.ui.fragments.ChatFragment;
+import arc.*;
+import logging.util.*;
+import mindustry.ui.fragments.*;
 
 /** Finally, no reflection */
 public class ExtraChatFragment extends ChatFragment{
@@ -22,11 +21,11 @@ public class ExtraChatFragment extends ChatFragment{
     }
 
     @Override
-    public void addMessage(String message, String sender){
-        super.addMessage(message, sender);
+    public void addMessage(String message){
+        super.addMessage(message);
 
-        if (enableTranslation && sender != player.name) Translating.translate(message, targetLang, translation -> {
-            if (!translation.equals(message)) super.addMessage(translation, "Translation");
+        if (enableTranslation) Translating.translate(message, targetLang, translation -> {
+            if (!translation.equals(message)) super.addMessage(translation);
         });
     }
 }

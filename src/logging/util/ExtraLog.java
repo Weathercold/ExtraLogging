@@ -1,11 +1,10 @@
 package logging.util;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 
-import arc.Core;
-import arc.util.Log;
-import arc.util.Log.LogLevel;
+import arc.*;
+import arc.util.*;
+import arc.util.Log.*;
 
 /** {@link arc.util.Log} Wrapper
  * @author Weathercold
