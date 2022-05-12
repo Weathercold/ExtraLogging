@@ -1,4 +1,4 @@
-package logging.ui;
+package logging.ui.fragments;
 
 import static logging.ExtraVars.*;
 

@@ -9,7 +9,7 @@ import arc.*;
 import arc.struct.*;
 import arc.util.*;
 import arc.util.Log.*;
-import logging.ui.*;
+import logging.core.*;
 import logging.util.*;
 import mindustry.*;
 import mindustry.core.*;
@@ -37,13 +37,13 @@ public class ExtraVars{
         ClientPreConnectEvent.class,
         StateChangeEvent.class,
         DisposeEvent.class
-        );
+    );
         
     public static String targetLang = Locale.getDefault().getLanguage();
     public static Seq<String> supportedLangs = new Seq<>();
     public static boolean enableTranslation;
 
-    public static ExtraSettings settings = new ExtraSettings();
+    public static ExtraUI ui = new ExtraUI();
 
     static{initenv();}
 
