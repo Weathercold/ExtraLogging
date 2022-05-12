@@ -2,7 +2,8 @@ package logging.util;
 
 import static logging.ExtraVars.*;
 import static logging.util.ColorUtils.*;
-import static mindustry.Vars.*;
+import static mindustry.Vars.headless;
+import static mindustry.Vars.ui;
 
 import java.time.*;
 
@@ -16,7 +17,7 @@ import mindustry.game.EventType.*;
  */
 public class ExtraLogHandler implements LogHandler{
     public String[] l = {"D", "I", "W", "E", "/"};
-    public static String[] L = {"[green]", "[royal]", "[yellow]", "[scarlet]", ""};
+    public String[] L = {"[green]", "[royal]", "[yellow]", "[scarlet]", ""};
 
     public Seq<String> logBuffer = new Seq<>();
     public static boolean clientLoaded = false;

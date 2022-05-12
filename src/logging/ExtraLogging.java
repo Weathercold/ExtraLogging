@@ -10,7 +10,7 @@ import java.lang.reflect.*;
 import arc.*;
 import arc.struct.*;
 import arc.util.*;
-import logging.ui.*;
+import logging.ui.fragments.*;
 import logging.util.*;
 import mindustry.Vars;
 import mindustry.gen.*;
@@ -40,7 +40,7 @@ public class ExtraLogging extends Mod{
     public void init(){
         if (enableMetaDebugging) debug("Initializing");
 
-        settings.init();
+        ui.init();
         if (enableTranslation) Vars.ui.chatfrag = new ExtraChatFragment();
     }
 

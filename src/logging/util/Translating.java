@@ -24,7 +24,8 @@ public class Translating{
         "translate.api.skitzen.com", false,
         "libretranslate.de", false,
         "libretranslate.pussthecat.org", false,
-        "translate.fortytwo-it.com", false
+        "translate.fortytwo-it.com", false,
+        "translate.terraprint.co", false
     );
 
     // Might break certain mods idk

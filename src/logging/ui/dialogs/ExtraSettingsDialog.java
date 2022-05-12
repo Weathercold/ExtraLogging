@@ -1,4 +1,4 @@
-package logging.ui;
+package logging.ui.dialogs;
 
 import static arc.Core.*;
 import static logging.ExtraVars.*;
@@ -16,11 +16,11 @@ import mindustry.ui.dialogs.*;
 import mindustry.ui.dialogs.SettingsMenuDialog.*;
 
 /** Credits to meep for template https://github.com/MEEPofFaith/testing-utilities-java/blob/master/src/testing/content/TUSettings.java */
-public class ExtraSettings{
+public class ExtraSettingsDialog{
     public BaseDialog dialog;
     public SettingsTable table;
 
-    public void init(){
+    public ExtraSettingsDialog(){
         dialog = new BaseDialog("@extra-logging.displayName");
         dialog.addCloseButton();
         dialog.pane(b -> {});
@@ -36,10 +36,11 @@ public class ExtraSettings{
         //endregion
         //region Advanced
         
-        table.pref(new AreaTextSetting("extra-logformat", "[gray][$t][] &fb$L[$l][] $M$m[]", null));
-        table.pref(new TextSetting("extra-timestampformat", "HH:mm:ss.SSS", null));
+        table.labelWrap("");
+        table.areaTextPref("extra-logformat", "[gray][$t][] &fb$L[$l][] $M$m[]", null);
+        table.textPref("extra-timestampformat", "HH:mm:ss.SSS", null);
         table.checkPref("extra-enablemetadebugging", false);
-        table.pref(new TextSetting("extra-metacolor", "[accent]", null));
+        table.textPref("extra-metacolor", "[accent]", null);
         table.sliderPref("extra-eventloglevel", 0, 0, 4, v -> LogLevel.values()[v].name());
         
         //endregion
