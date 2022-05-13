@@ -21,7 +21,7 @@ public class ExtraSettingsDialog{
     public SettingsTable table;
 
     public ExtraSettingsDialog(){
-        dialog = new BaseDialog("@extra-logging.displayName");
+        dialog = new BaseDialog("@extra-logging.displayname");
         dialog.addCloseButton();
         dialog.pane(b -> {});
         
@@ -37,7 +37,7 @@ public class ExtraSettingsDialog{
         //region Advanced
         
         table.labelWrap("");
-        table.areaTextPref("extra-logformat", "[gray][$t][] &fb$L[$l][] $M$m[]", null);
+        table.areaTextPref("extra-logformat", "[gray][$t][] &fb$L[$l][] $m[]", null);
         table.textPref("extra-timestampformat", "HH:mm:ss.SSS", null);
         table.checkPref("extra-enablemetadebugging", false);
         table.textPref("extra-metacolor", "[accent]", null);
@@ -56,7 +56,7 @@ public class ExtraSettingsDialog{
         Vars.ui.settings.shown(() -> {
             Table settingUi = (Table)((Group)((Group)(Vars.ui.settings.getChildren().get(1))).getChildren().get(0)).getChildren().get(0);
             settingUi.row();
-            settingUi.button("@extra-logging.displayName", Styles.cleart, dialog::show);
+            settingUi.button("@extra-logging.displayname", Styles.cleart, dialog::show);
         });
 
         Vars.ui.settings.hidden(ExtraVars::refreshenv);
