@@ -35,7 +35,6 @@ public class ExtraLogHandler implements LogHandler{
         text = logf.replaceAll("\\$t", time)
                    .replaceAll("\\$L", L[level.ordinal()])
                    .replaceAll("\\$l", l[level.ordinal()])
-                   .replaceAll("\\$M", text.startsWith("[EL]") ? metaColor : "")
                    .replaceAll("\\$m", text);
 
         //Java console

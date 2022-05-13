@@ -1,5 +1,7 @@
 package logging.util;
 
+import static logging.ExtraVars.*;
+
 import java.io.*;
 
 import arc.*;
@@ -12,9 +14,9 @@ import arc.util.Log.*;
 public class ExtraLog{
     public static void log(LogLevel level, String text, Object... args){
         if (text.startsWith("@")){
-            Log.log(level, "[EL] " + Core.bundle.format(text, args));
+            Log.log(level, metaColor + "[EL] " + Core.bundle.format(text, args));
         }else{
-            Log.log(level, "[EL] " + text, args);
+            Log.log(level, metaColor + "[EL] " + text, args);
         }
     }
 
