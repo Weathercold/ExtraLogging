@@ -23,7 +23,7 @@ public class ExtraLogging extends Mod{
         Log.logger = new ExtraLogHandler();
         Log.level = Log.LogLevel.values()[Core.settings.getInt("extra-loglevel", 0)];
         
-        if (enableMetaDebugging) debug("Creating mod");
+        debug("Creating mod");
         
         //Register events
         if (enableEventLogging) listeningEvents.each(c -> Events.on(c, e -> {
@@ -38,7 +38,7 @@ public class ExtraLogging extends Mod{
 
     @Override
     public void init(){
-        if (enableMetaDebugging) debug("Initializing");
+        debug("Initializing");
 
         ui.init();
         if (enableTranslation) Vars.ui.chatfrag = new ExtraChatFragment();
@@ -46,12 +46,12 @@ public class ExtraLogging extends Mod{
 
     @Override
     public void registerServerCommands(CommandHandler handler){
-        if (enableMetaDebugging) debug("Registering commands");
+        debug("Registering commands");
     }
 
     @Override
     public void registerClientCommands(CommandHandler handler){
-        if (enableMetaDebugging) debug("Registering commands");
+        debug("Registering commands");
 
         if (enableTranslation) handler.register("tl", "[lang] [message...]", Core.bundle.get("extra-logging.command.tl.description"), (String[] args, Player player) -> {
             switch (args.length){

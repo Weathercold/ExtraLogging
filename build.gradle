@@ -27,8 +27,8 @@ allprojects{
 }
 
 dependencies{
-    compileOnly "com.github.anuken.arc:arc-core:master-SNAPSHOT"
-    compileOnly "com.github.anuken.mindustryjitpack:core:main-SNAPSHOT"
+    compileOnly "com.github.Anuken.Arc:arc-core:master-SNAPSHOT"
+    compileOnly "com.github.Anuken.MindustryJitpack:core:main-SNAPSHOT"
 
     annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
 }
