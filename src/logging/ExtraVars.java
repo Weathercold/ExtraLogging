@@ -45,9 +45,9 @@ public class ExtraVars{
 
     public static ExtraUI ui = new ExtraUI();
 
-    static{initenv();}
+    static{init();}
 
-    public static void initenv(){
+    public static void init(){
         try{
             Reflect.get(Version.class, "clientVersion");
             isFoo = true;
