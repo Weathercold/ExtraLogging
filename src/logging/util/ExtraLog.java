@@ -14,7 +14,7 @@ import arc.util.Log.*;
  */
 public class ExtraLog{
     public static void log(LogLevel level, String text, Object... args){
-        if (level == debug && !enableMetaDebugging)return;
+        if (level == debug && !enableMetaDebugging) return;
         if (text.startsWith("@"))
             Log.log(level, metaColor + "[EL][] " + Core.bundle.format(text, args));
         else
@@ -22,7 +22,7 @@ public class ExtraLog{
     }
     
     public static void logList(LogLevel level, Object... args){
-        if (level == debug && !enableMetaDebugging)return;
+        if (level == debug && !enableMetaDebugging) return;
         StringBuilder build = new StringBuilder().append(metaColor + "[EL][] ");
         for(Object o : args){
             build.append(o);
@@ -31,11 +31,17 @@ public class ExtraLog{
         Log.log(level, build.toString().substring(0, build.length() - 1));
     }
 
-    public static void logTh(LogLevel level, String text, Throwable th){
-        if (level == debug && !enableMetaDebugging)return;
+    public static void logTh(LogLevel level, Throwable th){
+        if (level == debug && !enableMetaDebugging) return;
         StringWriter sw = new StringWriter().append(metaColor + "[EL][] ");
-        PrintWriter pw = new PrintWriter(sw);
-        th.printStackTrace(pw);
+        th.printStackTrace(new PrintWriter(sw));
+        Log.log(level, "" + sw);
+    }
+
+    public static void logTh(LogLevel level, String text, Throwable th){
+        if (level == debug && !enableMetaDebugging) return;
+        StringWriter sw = new StringWriter().append(metaColor + "[EL][] ");
+        th.printStackTrace(new PrintWriter(sw));
         Log.log(level, text + "\n" + sw);
     }
 
@@ -59,12 +65,20 @@ public class ExtraLog{
         log(warn, text, args);
     }
 
+    public static void warn(Throwable th){
+        logTh(warn, th);
+    }
+    
     public static void warn(String text, Throwable th){
         logTh(warn, text, th);
     }
 
     public static void err(String text, Object... args){
         log(LogLevel.err, text, args);
+    }
+
+    public static void err(Throwable th){
+        logTh(err, th);
     }
 
     public static void err(String text, Throwable th){

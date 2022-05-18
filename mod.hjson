@@ -5,7 +5,7 @@
     description: "Adds more debugging features and improvements.\n\nFeatures:\n    - Enables the in-game console and sets log level to debug.\n    - Fully customizable log format w/ timestamps.\n    - Reenables colored terminal for Windows and Android.\n    - Chat message translation.\n    - Various other QoL improvements.\n\nSee README.md for more information."
     author: "Weathercold"
 
-    version: 1.5.0
+    version: 1.5.5
     minGameVersion: 136
 
     main: logging.ExtraLogging

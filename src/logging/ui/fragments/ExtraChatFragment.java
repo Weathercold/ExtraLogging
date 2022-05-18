@@ -15,7 +15,6 @@ public class ExtraChatFragment extends ChatFragment{
         ChatFragment defFrag = (ChatFragment)Core.scene.find(f -> f instanceof ChatFragment);
         defFrag.clear();
         defFrag.remove();
-        defFrag = null;
 
         Core.scene.add(this);
     }

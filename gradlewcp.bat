@@ -71,7 +71,7 @@ set CLASSPATH=%APP_HOME%\gradle\wrapper\gradle-wrapper.jar
 @rem Copy mod to the mods folder
 :loop
 if not exist ".\\build\\libs\\ExtraLoggingDesktop.jar" goto loop
-copy ".\\build\\libs\\ExtraLoggingDesktop.jar" "%HOME%\\AppData\\Roaming\\Mindustry\\Mods\\ExtraLogging.zip"
+copy ".\\build\\libs\\ExtraLoggingDesktop.jar" "%USERPROFILE%\\AppData\\Roaming\\Mindustry\\Mods\\ExtraLogging.zip"
 
 :end
 echo uwu
