@@ -42,7 +42,7 @@ public class ExtraLogHandler implements LogHandler{
 
         //In-game console
         if(!headless){
-            if (clientLoaded) ui.scriptfrag.addMessage(formatCons(text));
+            if (clientLoaded) ui.consolefrag.addMessage(formatCons(text));
             else logBuffer.add(formatCons(text));
         }
     }
