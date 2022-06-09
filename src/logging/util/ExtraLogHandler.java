@@ -17,7 +17,7 @@ import mindustry.game.EventType.*;
  */
 public class ExtraLogHandler implements LogHandler{
     public String[] l = {"D", "I", "W", "E", "/"};
-    public String[] L = {"[green]", "[royal]", "[yellow]", "[scarlet]", ""};
+    public String[] L = {"[green]", "[royal]", "[yellow]", "[scarlet]", "[lightgray]"};
 
     public Seq<String> logBuffer = new Seq<>();
     public static boolean clientLoaded = false;
@@ -25,7 +25,7 @@ public class ExtraLogHandler implements LogHandler{
     static{Events.on(ClientLoadEvent.class, e -> clientLoaded = true);}
 
     public ExtraLogHandler(){
-        Events.on(ClientLoadEvent.class, e -> logBuffer.each(ui.scriptfrag::addMessage));
+        Events.on(ClientLoadEvent.class, e -> logBuffer.each(ui.consolefrag::addMessage));
     }
     
     @Override
