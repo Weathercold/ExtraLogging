@@ -18,8 +18,7 @@ import mindustry.mod.*;
 
 @SuppressWarnings("unchecked")
 public class ExtraLogging extends Mod{
-    public ExtraLogging(){        
-        Vars.enableConsole = true;
+    public ExtraLogging(){
         Log.logger = new ExtraLogHandler();
         Log.level = Log.LogLevel.values()[Core.settings.getInt("extra-loglevel", 0)];
         
