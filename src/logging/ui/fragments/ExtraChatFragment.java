@@ -1,8 +1,8 @@
 package logging.ui.fragments;
 
-import arc.*;
-import logging.util.*;
-import mindustry.ui.fragments.*;
+import arc.Core;
+import logging.util.Translating;
+import mindustry.ui.fragments.ChatFragment;
 
 import static logging.ExtraVars.*;
 

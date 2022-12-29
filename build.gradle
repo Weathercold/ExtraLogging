@@ -1,3 +1,4 @@
+//file:noinspection GroovyUnusedAssignment
 apply plugin: "java"
 
 version '1.0'

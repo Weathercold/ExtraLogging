@@ -1,15 +1,12 @@
 package logging.util;
 
-import arc.*;
-import arc.util.*;
-import arc.util.Log.*;
+import arc.Core;
+import arc.util.Log;
+import arc.util.Log.LogLevel;
 
 import java.io.*;
 
-import static arc.util.Log.LogLevel.debug;
-import static arc.util.Log.LogLevel.err;
-import static arc.util.Log.LogLevel.info;
-import static arc.util.Log.LogLevel.warn;
+import static arc.util.Log.LogLevel.*;
 import static logging.ExtraVars.*;
 
 /**
@@ -21,7 +18,7 @@ public class ExtraLog{
     public static void log(LogLevel level, String text, Object... args){
         if(level == debug && !enableMetaDebugging) return;
         if(text.startsWith("@"))
-            Log.log(level, metaColor + "[EL][] " + Core.bundle.format(text, args));
+            Log.log(level, metaColor + "[EL][] " + Core.bundle.format(text.substring(1), args));
         else
             Log.log(level, metaColor + "[EL][] " + text, args);
     }

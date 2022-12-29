@@ -1,6 +1,6 @@
 package logging.core;
 
-import logging.ui.dialogs.*;
+import logging.ui.dialogs.ExtraSettingsDialog;
 
 public class ExtraUI{
     @SuppressWarnings("unused")

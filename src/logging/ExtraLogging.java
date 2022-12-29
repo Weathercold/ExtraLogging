@@ -1,15 +1,15 @@
 package logging;
 
 import arc.*;
-import arc.struct.*;
+import arc.struct.Seq;
 import arc.util.*;
-import logging.ui.fragments.*;
-import logging.util.*;
-import mindustry.*;
+import logging.ui.fragments.ExtraChatFragment;
+import logging.util.ExtraLogHandler;
+import mindustry.Vars;
 import mindustry.gen.*;
-import mindustry.mod.*;
+import mindustry.mod.Mod;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
 
 import static logging.ExtraVars.*;
 import static logging.util.ColorUtils.parseMsg;
@@ -30,8 +30,7 @@ public class ExtraLogging extends Mod{
             for(Field field : c.getDeclaredFields())
                 try{
                     fields.append(" ").append(field.getName()).append("=").append(field.get(e));
-                }catch(IllegalArgumentException | IllegalAccessException ignored){
-                }
+                }catch(IllegalArgumentException | IllegalAccessException ignored){}
 
             log(eventLogLevel, c.getSimpleName() + fields);
         }));
@@ -54,22 +53,27 @@ public class ExtraLogging extends Mod{
     public void registerClientCommands(CommandHandler handler){
         debug("Registering commands");
 
-        if(enableTranslation)
-            handler.register("tl", "[lang] [message...]", Core.bundle.get("extra-logging.command.tl.description"), (String[] args, Player player) -> {
+        if(enableTranslation) handler.register(
+            "tl", "[lang] [message...]",
+            Core.bundle.get("extra-logging.command.tl.description"),
+            (String[] args, Player player) -> {
                 switch(args.length){
                     case 0 -> {
                         Object message = ((Seq<Object>)Reflect.get(Vars.ui.chatfrag, "messages")).firstOpt();
                         if(message == null) return;
                         String cont = parseMsg(Reflect.get(message, "message"));
-                        translate(cont, targetLang, translation -> Vars.ui.chatfrag.addMessage("Translation: " + translation));
+                        translate(cont, targetLang,
+                                  translation -> Vars.ui.chatfrag.addMessage("Translation: " + translation));
                     }
-                    case 1 ->
-                        translate(args[0], translation -> Call.sendChatMessage(translation + " [gray](translated)"));
+                    case 1 -> translate(args[0],
+                                        translation -> Call.sendChatMessage(translation + " [gray](translated)"));
                     case 2 -> {
                         if(supportedLangs.contains(args[0]))
-                            translate(args[1], args[0], translation -> Call.sendChatMessage(translation + " [gray](translated)"));
+                            translate(args[1], args[0],
+                                      translation -> Call.sendChatMessage(translation + " [gray](translated)"));
                         else
-                            translate(args[0] + args[1], translation -> Call.sendChatMessage(translation + " [gray](translated)"));
+                            translate(args[0] + args[1],
+                                      translation -> Call.sendChatMessage(translation + " [gray](translated)"));
                     }
                 }
             });

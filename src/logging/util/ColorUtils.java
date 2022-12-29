@@ -1,8 +1,8 @@
 package logging.util;
 
-import arc.struct.ObjectMap.*;
+import arc.struct.ObjectMap.Entry;
 import arc.struct.*;
-import arc.util.*;
+import arc.util.Strings;
 
 /**
  * {@link arc.util.ColorCodes} sucks, use this one
@@ -142,7 +142,7 @@ public class ColorUtils{
         return useColors ? convertNames(convertCodes(text)) : removeColors(removeNames(removeCodes(text)));
     }
 
-    /** Format for console output, ie. remove colors and codes. */
+    /** Format for console output, i.e. remove colors and codes. */
     public static String formatCons(String text, Object... args){
         return removeColors(removeCodes(Strings.format(text, args)));
     }

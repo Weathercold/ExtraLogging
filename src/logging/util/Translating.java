@@ -1,18 +1,18 @@
 package logging.util;
 
-import arc.func.*;
+import arc.func.Cons;
 import arc.struct.*;
 import arc.util.*;
 import arc.util.Http.*;
-import arc.util.serialization.JsonWriter.*;
-import mindustry.io.*;
+import arc.util.serialization.JsonWriter.OutputType;
+import mindustry.io.JsonIO;
 
 import static logging.ExtraVars.enableTranslation;
 import static logging.util.ExtraLog.*;
 
 /**
- * Partial wrapper for the <a href=https://libretranslate.com>LibreTranslate API</a> <!-- Is this how I'm supposed to
- * write async --->
+ * Partial wrapper for the <a href=https://libretranslate.com>LibreTranslate API</a>
+ * <!-- Is this how I'm supposed to write async --->
  * @author Weathercold
  */
 @SuppressWarnings("unused")

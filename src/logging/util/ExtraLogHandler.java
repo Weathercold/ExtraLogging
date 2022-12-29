@@ -1,14 +1,13 @@
 package logging.util;
 
-import arc.*;
-import arc.struct.*;
+import arc.Events;
+import arc.struct.Seq;
 import arc.util.Log.*;
-import mindustry.game.EventType.*;
+import mindustry.game.EventType.ClientLoadEvent;
 
-import java.time.*;
+import java.time.LocalTime;
 
 import static logging.ExtraVars.*;
-import static logging.util.ColorUtils.formatColors;
 import static logging.util.ColorUtils.*;
 import static mindustry.Vars.ui;
 import static mindustry.Vars.*;
@@ -38,9 +37,9 @@ public class ExtraLogHandler implements LogHandler{
         String time = timef.format(LocalTime.now());
 
         text = logf.replaceAll("\\$t", time)
-            .replaceAll("\\$L", L[level.ordinal()])
-            .replaceAll("\\$l", l[level.ordinal()])
-            .replaceAll("\\$m", text);
+                   .replaceAll("\\$L", L[level.ordinal()])
+                   .replaceAll("\\$l", l[level.ordinal()])
+                   .replaceAll("\\$m", text);
 
         //Java console
         System.out.println(formatColors(text, coloredTerminal));

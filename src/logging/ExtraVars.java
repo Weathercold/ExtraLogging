@@ -1,17 +1,16 @@
 package logging;
 
 import arc.*;
-import arc.struct.*;
+import arc.struct.Seq;
 import arc.util.*;
-import arc.util.Log.*;
-import logging.core.*;
-import logging.util.*;
-import mindustry.*;
-import mindustry.core.*;
+import arc.util.Log.LogLevel;
+import logging.core.ExtraUI;
+import logging.util.Translating;
+import mindustry.Vars;
 import mindustry.game.EventType.*;
 
-import java.time.format.*;
-import java.util.*;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 import static logging.util.ExtraLog.info;
 
@@ -45,9 +44,9 @@ public class ExtraVars{
 
     public static void init(){
         try{
-            Reflect.get(Version.class, "clientVersion");
+            Reflect.get(Class.forName("mindustry.client.ClientVars"), "enableTranslation");
             isFoo = true;
-        }catch(RuntimeException e){
+        }catch(RuntimeException | ClassNotFoundException e){
             isFoo = false;
         }
 
@@ -56,8 +55,9 @@ public class ExtraVars{
             targetLang = langs.contains(targetLang) ? targetLang : "en";
         });
 
-        if(isFoo) info("@extra-logging.footranslation");
-        if(Vars.headless) info("@extra-logging.headlesstranslation");
+        // Delay logging because the log handler depends on ExtraVars being initialised
+        if(isFoo) Events.on(ClientLoadEvent.class, e -> info("@extra-logging.footranslation"));
+        if(Vars.headless) Events.on(ClientLoadEvent.class, e -> info("@extra-logging.headlesstranslation"));
 
         refreshenv();
     }
@@ -66,9 +66,10 @@ public class ExtraVars{
         Log.level = LogLevel.values()[Core.settings.getInt("extra-loglevel")];
         coloredTerminal = Core.settings.getBool("extra-coloredterminal", !OS.isWindows && !OS.isAndroid);
         enableEventLogging = Core.settings.getBool("extra-enableeventlogging", false);
-        enableTranslation = Core.settings.getBool("extra-enabletranslation", !isFoo && !Vars.headless) && !isFoo && !Vars.headless;
+        enableTranslation =
+            Core.settings.getBool("extra-enabletranslation", !isFoo && !Vars.headless) && !isFoo && !Vars.headless;
 
-        logf = Core.settings.getString("extra-logformat", "[gray][$t][] &fb$L[$l][] $M$m[]");
+        logf = Core.settings.getString("extra-logformat", "[gray][$t][] &fb$L[$l][] $m[]");
         try{
             timef = DateTimeFormatter.ofPattern(Core.settings.getString("extra-timestampformat", "HH:mm:ss.SSS"));
         }catch(Throwable ignored){

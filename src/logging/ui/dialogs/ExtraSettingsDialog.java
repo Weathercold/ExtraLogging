@@ -1,11 +1,11 @@
 package logging.ui.dialogs;
 
-import arc.util.Log.*;
-import arc.util.*;
-import logging.*;
-import mindustry.*;
-import mindustry.gen.*;
-import mindustry.ui.dialogs.SettingsMenuDialog.*;
+import arc.util.Log.LogLevel;
+import arc.util.OS;
+import logging.ExtraVars;
+import mindustry.Vars;
+import mindustry.gen.Icon;
+import mindustry.ui.dialogs.SettingsMenuDialog.SettingsTable;
 
 import static logging.ExtraVars.isFoo;
 
