@@ -1,6 +1,6 @@
 name: Commit Testing
 
-on: [push]
+on: [ push ]
 
 jobs:
   buildJar:

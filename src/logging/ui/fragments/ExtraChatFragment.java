@@ -1,10 +1,10 @@
 package logging.ui.fragments;
 
-import static logging.ExtraVars.*;
-
 import arc.*;
 import logging.util.*;
 import mindustry.ui.fragments.*;
+
+import static logging.ExtraVars.*;
 
 /** Finally, no reflection */
 public class ExtraChatFragment extends ChatFragment{
@@ -23,8 +23,8 @@ public class ExtraChatFragment extends ChatFragment{
     public void addMessage(String message){
         super.addMessage(message);
 
-        if (enableTranslation) Translating.translate(message, targetLang, translation -> {
-            if (!translation.equals(message)) super.addMessage(translation);
+        if(enableTranslation) Translating.translate(message, targetLang, translation -> {
+            if(!translation.equals(message)) super.addMessage(translation);
         });
     }
 }

@@ -1,31 +1,33 @@
 package logging.ui.dialogs;
 
-import static logging.ExtraVars.*;
-
 import arc.util.Log.*;
 import arc.util.*;
 import logging.*;
 import mindustry.*;
-import mindustry.gen.Icon;
+import mindustry.gen.*;
 import mindustry.ui.dialogs.SettingsMenuDialog.*;
 
+import static logging.ExtraVars.isFoo;
+
 public class ExtraSettingsDialog{
+    @SuppressWarnings("unused")
     public SettingsTable t;
 
+    @SuppressWarnings("ConstantConditions")
     public ExtraSettingsDialog(){
         Vars.ui.settings.addCategory("@extra-logging.displayname", Icon.wrench, st -> {
             t = st;
 
             //region Basic
-            
+
             st.sliderPref("extra-loglevel", 0, 0, 4, v -> LogLevel.values()[v].name());
             st.checkPref("extra-coloredterminal", !OS.isWindows && !OS.isAndroid);
             st.checkPref("extra-enableeventlogging", false);
-            if (!isFoo) st.checkPref("extra-enabletranslation", !isFoo);
-        
+            if(!isFoo) st.checkPref("extra-enabletranslation", !isFoo);
+
             //endregion
             //region Advanced
-            
+
             st.labelWrap("");
             st.areaTextPref("extra-logformat", "[gray][$t][] &fb$L[$l][] $m[]", null);
             st.textPref("extra-timestampformat", "HH:mm:ss.SSS", null);
@@ -35,7 +37,7 @@ public class ExtraSettingsDialog{
             //endregion
 
         });
-        
+
         //region Listeners
 
         Vars.ui.settings.hidden(ExtraVars::refreshenv);

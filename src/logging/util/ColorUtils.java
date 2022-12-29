@@ -1,48 +1,50 @@
 package logging.util;
 
-import arc.struct.*;
 import arc.struct.ObjectMap.*;
+import arc.struct.*;
 import arc.util.*;
 
-/** {@link arc.util.ColorCodes} sucks, use this one
+/**
+ * {@link arc.util.ColorCodes} sucks, use this one
  * @author Weathercold
  */
+@SuppressWarnings("unused")
 public class ColorUtils{
 
     //region Fields
 
-    public static String
-    flush = "\033[H\033[2J",
-    reset = "\u001B[0m",
-    bold = "\u001B[1m",
-    italic = "\u001B[3m",
-    underline = "\u001B[4m",
+    public static final String
+        flush = "\033[H\033[2J",
+        reset = "\u001B[0m",
+        bold = "\u001B[1m",
+        italic = "\u001B[3m",
+        underline = "\u001B[4m",
 
     black = "\u001B[30m",
-    red = "\u001B[31m",
-    green = "\u001B[32m",
-    yellow = "\u001B[33m",
-    blue = "\u001B[34m",
-    purple = "\u001B[35m",
-    cyan = "\u001B[36m",
-    lightBlack = "\u001b[90m",
-    lightRed = "\u001B[91m",
-    lightGreen = "\u001B[92m",
-    lightYellow = "\u001B[93m",
-    lightBlue = "\u001B[94m",
-    lightMagenta = "\u001B[95m",
-    lightCyan = "\u001B[96m",
-    lightWhite = "\u001b[97m",
-    white = "\u001B[37m",
+        red = "\u001B[31m",
+        green = "\u001B[32m",
+        yellow = "\u001B[33m",
+        blue = "\u001B[34m",
+        purple = "\u001B[35m",
+        cyan = "\u001B[36m",
+        lightBlack = "\u001b[90m",
+        lightRed = "\u001B[91m",
+        lightGreen = "\u001B[92m",
+        lightYellow = "\u001B[93m",
+        lightBlue = "\u001B[94m",
+        lightMagenta = "\u001B[95m",
+        lightCyan = "\u001B[96m",
+        lightWhite = "\u001b[97m",
+        white = "\u001B[37m",
 
     backDefault = "\u001B[49m",
-    backRed = "\u001B[41m",
-    backGreen = "\u001B[42m",
-    backYellow = "\u001B[43m",
-    backBlue = "\u001B[44m";
+        backRed = "\u001B[41m",
+        backGreen = "\u001B[42m",
+        backYellow = "\u001B[43m",
+        backBlue = "\u001B[44m";
 
-    public static StringMap
-    codeMap = StringMap.of(
+    public static final StringMap
+        codeMap = StringMap.of(
         "ff", flush,
         "fr", reset,
         "fb", bold,
@@ -127,10 +129,10 @@ public class ColorUtils{
         "stat", lightBlack
     );
 
-    public static Seq<String>
-    colors = codeMap.values().toSeq(),
-    codes = codeMap.keys().toSeq(),
-    names = nameMap.keys().toSeq();
+    public static final Seq<String>
+        colors = codeMap.values().toSeq(),
+        codes = codeMap.keys().toSeq(),
+        names = nameMap.keys().toSeq();
 
     //endregion
     //region Methods
@@ -144,7 +146,7 @@ public class ColorUtils{
     public static String formatCons(String text, Object... args){
         return removeColors(removeCodes(Strings.format(text, args)));
     }
-    
+
     /** Parse chat message. */
     public static String parseMsg(String text){
         return formatColors(text.substring(text.indexOf(" ") + 1), false);
@@ -152,31 +154,31 @@ public class ColorUtils{
 
     /** Convert codes to colors. */
     public static String convertCodes(String text){
-        for (Entry<String, String> e : codeMap) text = text.replace("&" + e.key, e.value);
+        for(Entry<String, String> e : codeMap) text = text.replace("&" + e.key, e.value);
         return text;
     }
-    
+
     /** Convert names to colors. */
     public static String convertNames(String text){
-        for (Entry<String, String> e : nameMap) text = text.replace("[" + e.key + "]", e.value);
+        for(Entry<String, String> e : nameMap) text = text.replace("[" + e.key + "]", e.value);
         return text.replaceAll("\\[#[0-9a-f]{6,8}]", ""); //It's hard to convert custom colors
     }
 
     /** Remove all colors. */
     public static String removeColors(String text){
-        for (String color : colors) text = text.replace(color, "");
+        for(String color : colors) text = text.replace(color, "");
         return text;
     }
-    
+
     /** Remove all codes. */
     public static String removeCodes(String text){
-        for (String code : codes) text = text.replace("&" + code, "");
+        for(String code : codes) text = text.replace("&" + code, "");
         return text;
     }
 
     /** Remove all names. */
     public static String removeNames(String text){
-        for (String name : names) text = text.replace("[" + name + "]", "");
+        for(String name : names) text = text.replace("[" + name + "]", "");
         return text.replaceAll("\\[#[0-9a-f]{6,8}]", "");
     }
 

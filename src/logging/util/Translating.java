@@ -1,8 +1,5 @@
 package logging.util;
 
-import static logging.ExtraVars.*;
-import static logging.util.ExtraLog.*;
-
 import arc.func.*;
 import arc.struct.*;
 import arc.util.*;
@@ -10,15 +7,21 @@ import arc.util.Http.*;
 import arc.util.serialization.JsonWriter.*;
 import mindustry.io.*;
 
-/** Partial wrapper for the <a href=https://libretranslate.com>LibreTranslate API</a>
- * <!-- Is this how I'm supposed to write async --->
+import static logging.ExtraVars.enableTranslation;
+import static logging.util.ExtraLog.*;
+
+/**
+ * Partial wrapper for the <a href=https://libretranslate.com>LibreTranslate API</a> <!-- Is this how I'm supposed to
+ * write async --->
  * @author Weathercold
  */
+@SuppressWarnings("unused")
 public class Translating{
-    /** List of mirrors can be found <a href=https://github.com/LibreTranslate/LibreTranslate#mirrors>here</a>.
-     * If you see a mirror not working, please make a pr.
+    /**
+     * List of mirrors can be found <a href=https://github.com/LibreTranslate/LibreTranslate#mirrors>here</a>. If you
+     * see a mirror not working, please make a pr.
      */
-    public static volatile ObjectMap<String, Boolean> servers = ObjectMap.of(
+    public static final ObjectMap<String, Boolean> servers = ObjectMap.of(
         //"libretranslate.com", false, requires API key :(
         "translate.argosopentech.com", false,
         "translate.api.skitzen.com", false,
@@ -30,11 +33,12 @@ public class Translating{
 
     // Might break certain mods idk
     static{
-        if (enableTranslation) JsonIO.json.setOutputType(OutputType.json);
+        if(enableTranslation) JsonIO.json.setOutputType(OutputType.json);
     }
 
 
-    /** Retrieve an array of supported languages.
+    /**
+     * Retrieve an array of supported languages.
      * @param success The callback to run if no errors occurred.
      */
     public static void languages(Cons<Seq<String>> success){
@@ -43,17 +47,18 @@ public class Translating{
             res -> {
                 StringMap[] langs = JsonIO.json.fromJson(StringMap[].class, res);
                 Seq<String> codes = new Seq<>(langs.length);
-                for (StringMap lang : langs) codes.add(lang.get("code"));
+                for(StringMap lang : langs) codes.add(lang.get("code"));
                 success.get(codes);
             }
         );
     }
 
-    /** Get the language of the specified text.
+    /**
+     * Get the language of the specified text.
      * @param success The callback to run if no errors occurred.
      */
     public static void detect(String text, Cons<String> success){
-        if (text == null){
+        if(text == null){
             Log.err(new NullPointerException("Detect text cannot be null."));
             return;
         }
@@ -73,17 +78,21 @@ public class Translating{
         translate(text, "auto", target, success);
     }
 
-    /** Translate the specified text from the source language to the target language.
+    /**
+     * Translate the specified text from the source language to the target language.
      * @param source Source language code.
      * @param target target language code.
      * @param success The callback to run if no errors occurred.
      */
     public static void translate(String text, String source, String target, Cons<String> success){
-        if (text == null || source == null || target == null){
+        if(text == null || source == null || target == null){
             Log.err(new NullPointerException("Translate arguments cannot be null."));
             return;
         }
-        if (source == target){success.get(text); return;}
+        if(source.equals(target)){
+            success.get(text);
+            return;
+        }
 
         fetch(
             "/translate",
@@ -94,7 +103,7 @@ public class Translating{
             ),
             res -> {
                 String translation = JsonIO.json.fromJson(StringMap.class, res).get("translatedText");
-                if (translation.length() <= 256)
+                if(translation.length() <= 256)
                     success.get(translation);
                 else
                     warn("Translation is too long (@chars)", translation.length());
@@ -105,13 +114,14 @@ public class Translating{
     private static void fetch(String api, Cons<String> success){
         fetch(api, HttpMethod.GET, null, success);
     }
+
     private static void fetch(String api, @Nullable StringMap body, Cons<String> success){
         fetch(api, HttpMethod.POST, body, success);
     }
 
     private static void fetch(String api, HttpMethod method, @Nullable StringMap body, Cons<String> success){
         String server = servers.findKey(false, false);
-        if (server == null){
+        if(server == null){
             warn("Rate limit reached on all servers. Aborting translation.");
             return;
         }
@@ -121,9 +131,8 @@ public class Translating{
             .header("Content-Type", "application/json")
             .content(JsonIO.json.toJson(body, StringMap.class, String.class))
             .error(e -> {
-                if (e instanceof HttpStatusException){
-                    HttpStatusException hse = (HttpStatusException)e;
-                    switch (hse.status){
+                if(e instanceof HttpStatusException hse){
+                    switch(hse.status){
                         case BAD_REQUEST -> warn("Bad request, aborting translation: @", body);
                         case INTERNAL_SERVER_ERROR -> warn("Server-side error, aborting translation: @", body);
                         case UNKNOWN_STATUS -> { // most likely rate limit
@@ -133,7 +142,7 @@ public class Translating{
                             fetch(api, body, success);
                         }
                         default -> {
-                            if (servers.size >= 2){
+                            if(servers.size >= 2){
                                 warn("HTTP Response indicates error, retrying: @", hse);
                                 servers.remove(server);
                                 fetch(api, body, success);

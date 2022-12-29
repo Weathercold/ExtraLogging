@@ -1,46 +1,48 @@
 package logging.util;
 
-import static arc.util.Log.LogLevel.*;
-import static logging.ExtraVars.*;
-
-import java.io.*;
-
 import arc.*;
 import arc.util.*;
 import arc.util.Log.*;
 
-/** {@link arc.util.Log} Wrapper
+import java.io.*;
+
+import static arc.util.Log.LogLevel.debug;
+import static arc.util.Log.LogLevel.err;
+import static arc.util.Log.LogLevel.info;
+import static arc.util.Log.LogLevel.warn;
+import static logging.ExtraVars.*;
+
+/**
+ * {@link arc.util.Log} Wrapper
  * @author Weathercold
  */
+@SuppressWarnings("unused")
 public class ExtraLog{
     public static void log(LogLevel level, String text, Object... args){
-        if (level == debug && !enableMetaDebugging) return;
-        if (text.startsWith("@"))
+        if(level == debug && !enableMetaDebugging) return;
+        if(text.startsWith("@"))
             Log.log(level, metaColor + "[EL][] " + Core.bundle.format(text, args));
         else
             Log.log(level, metaColor + "[EL][] " + text, args);
     }
-    
+
     public static void logList(LogLevel level, Object... args){
-        if (level == debug && !enableMetaDebugging) return;
-        StringBuilder build = new StringBuilder().append(metaColor + "[EL][] ");
-        for(Object o : args){
-            build.append(o);
-            build.append(", ");
-        }
-        Log.log(level, build.toString().substring(0, build.length() - 1));
+        if(level == debug && !enableMetaDebugging) return;
+        var build = new StringBuilder().append(metaColor).append("[EL][] ");
+        for(Object o : args) build.append(o).append(", ");
+        Log.log(level, build.substring(0, build.length() - 1));
     }
 
     public static void logTh(LogLevel level, Throwable th){
-        if (level == debug && !enableMetaDebugging) return;
-        StringWriter sw = new StringWriter().append(metaColor + "[EL][] ");
+        if(level == debug && !enableMetaDebugging) return;
+        StringWriter sw = new StringWriter().append(metaColor).append("[EL][] ");
         th.printStackTrace(new PrintWriter(sw));
         Log.log(level, "" + sw);
     }
 
     public static void logTh(LogLevel level, String text, Throwable th){
-        if (level == debug && !enableMetaDebugging) return;
-        StringWriter sw = new StringWriter().append(metaColor + "[EL][] ");
+        if(level == debug && !enableMetaDebugging) return;
+        StringWriter sw = new StringWriter().append(metaColor).append("[EL][] ");
         th.printStackTrace(new PrintWriter(sw));
         Log.log(level, text + "\n" + sw);
     }
@@ -68,7 +70,7 @@ public class ExtraLog{
     public static void warn(Throwable th){
         logTh(warn, th);
     }
-    
+
     public static void warn(String text, Throwable th){
         logTh(warn, text, th);
     }
